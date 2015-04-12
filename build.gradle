@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = '0.0.1-SNAPSHOT'
+
+jar {
+  manifest { 
+    attributes "Main-Class": "beso.base.Main"
+  }  
+  from {
+    configurations.compile.collect {
+      it.isDirectory() ? it : zipTree(it)
+    }
+  }  
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testCompile 'junit:junit:4.12'
+  compile 'org.apache.commons:commons-lang3:3.0'
+  compile 'commons-io:commons-io:2.4'
+  compile 'org.json:json:20141113'
+  compile 'org.jsoup:jsoup:1.8.1'
+  compile 'joda-time:joda-time:2.7'
+  compile 'org.mongodb:mongodb-driver:3.0.0'
+  compile 'org.springframework.data:spring-data-mongodb:1.7.0.RELEASE'
+  compile 'ch.qos.logback:logback-classic:1.1.3'
+}
