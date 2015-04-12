@@ -1,5 +1,7 @@
 package beso.model;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,14 +16,16 @@ public class Match implements Saveable {
   private Integer goalsTeam2 = null;
   @Id
   private String id;
+  private final Date start;
   @DBRef
   private final Team team1;
   @DBRef
   private final Team team2;
 
-  public Match(final Team team1, final Team team2) {
+  public Match(final Team team1, final Team team2, final Date start) {
     this.team1 = team1;
     this.team2 = team2;
+    this.start = start;
   }
 
   public Integer getGoalsTeam1() {
@@ -34,6 +38,10 @@ public class Match implements Saveable {
 
   public String getId() {
     return id;
+  }
+
+  public Date getStart() {
+    return start;
   }
 
   public Team getTeam1() {

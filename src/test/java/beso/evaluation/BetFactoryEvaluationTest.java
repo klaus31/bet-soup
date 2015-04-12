@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import beso.MockFactory;
+import beso.TestBeanFactory;
 import beso.evaluation.BetFactoryEvaluation;
 import beso.evaluation.BetFactoryEvaluationPrognosis;
 import beso.model.Odds;
@@ -28,27 +28,27 @@ public class BetFactoryEvaluationTest {
     // then
     assertNull(rate);
     // when one hit is added
-    odds.add(MockFactory.getOddsWithFinishedMatch(1, 1, 2D, 1.3D, 2D));
+    odds.add(TestBeanFactory.getOddsWithFinishedMatch(1, 1, 2D, 1.3D, 2D));
     rate = evaluation.rate(factory, odds);
     // then 100 % is right
     assertEquals(1, rate, .01);
     // when add a fail
-    odds.add(MockFactory.getOddsWithFinishedMatch(1, 2, 2D, 1.3D, 2D));
+    odds.add(TestBeanFactory.getOddsWithFinishedMatch(1, 2, 2D, 1.3D, 2D));
     rate = evaluation.rate(factory, odds);
     // then 50 % is right
     assertEquals(.5, rate, .01);
     // when add another fail
-    odds.add(MockFactory.getOddsWithFinishedMatch(1, 2, 2D, 1.3D, 2D));
+    odds.add(TestBeanFactory.getOddsWithFinishedMatch(1, 2, 2D, 1.3D, 2D));
     rate = evaluation.rate(factory, odds);
     // then 33 % is right
     assertEquals(.33, rate, .01);
     // when add ambiguous bet
-    odds.add(MockFactory.getOddsWithFinishedMatch(1, 2, 1.3D, 1.3D, 2D));
+    odds.add(TestBeanFactory.getOddsWithFinishedMatch(1, 2, 1.3D, 1.3D, 2D));
     rate = evaluation.rate(factory, odds);
     // then 33 % is still right
     assertEquals(.33, rate, .01);
     // when add a null bet
-    odds.add(MockFactory.getOdds(1.3D, 1.3D, 2D));
+    odds.add(TestBeanFactory.getOdds(1.3D, 1.3D, 2D));
     rate = evaluation.rate(factory, odds);
     // then 33 % is still right
     assertEquals(.33, rate, .01);

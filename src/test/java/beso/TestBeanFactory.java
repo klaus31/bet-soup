@@ -1,5 +1,7 @@
 package beso;
 
+import java.util.Calendar;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -8,16 +10,20 @@ import beso.model.Match;
 import beso.model.Odds;
 import beso.model.Team;
 
-public class MockFactory {
+public class TestBeanFactory {
 
   public static ApplicationContext getApplicationContext() {
     return new AnnotationConfigApplicationContext(SpringMongoTestConfig.class);
   }
 
   public static Match getMatch() {
-    Team team1 = new Team("1. FC Onion");
-    Team team2 = new Team("1. FC Garlic");
-    return new Match(team1, team2);
+    return getMatch("1. FC Onion", "1. FC Garlic");
+  }
+
+  public static Match getMatch(final String nameTeam1, final String nameTeam2) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.YEAR, -1);
+    return new Match(getTeam(nameTeam1), getTeam(nameTeam2), calendar.getTime());
   }
 
   public static Odds getOdds(final double rateTeam1, final double rateDraw, final double rateTeam2) {
@@ -29,5 +35,10 @@ public class MockFactory {
     Odds result = getOdds(rateTeam1, rateDraw, rateTeam2);
     result.getMatch().setGoals(goalsTeam1, goalsTeam2);
     return result;
+  }
+
+  public static Team getTeam(final String name) {
+    Team team = new Team(name);
+    return team;
   }
 }

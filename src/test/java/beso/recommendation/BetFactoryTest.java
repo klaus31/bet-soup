@@ -3,7 +3,7 @@ package beso.recommendation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import beso.MockFactory;
+import beso.TestBeanFactory;
 import beso.model.Bet;
 import beso.model.Match;
 import beso.model.Odds;
@@ -18,7 +18,7 @@ public class BetFactoryTest {
 
   @BeforeClass
   public static void construct() {
-    match = MockFactory.getMatch();
+    match = TestBeanFactory.getMatch();
   }
 
   @Test

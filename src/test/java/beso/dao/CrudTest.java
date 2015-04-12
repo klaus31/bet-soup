@@ -5,8 +5,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import beso.MockFactory;
-import beso.dao.BesoDao;
+import beso.TestBeanFactory;
 import beso.model.Match;
 import beso.model.Team;
 
@@ -17,16 +16,14 @@ public class CrudTest {
 
   @BeforeClass
   public static void setupBesoDao() {
-    BesoDao.me().setApplicationContext(MockFactory.getApplicationContext());
+    BesoDao.me().setApplicationContext(TestBeanFactory.getApplicationContext());
   }
 
   @Test
   public void crudAMatch() {
-    Team team1 = new Team("1. FC Onion");
-    team1.save();
-    Team team2 = new Team("1. FC Garlic");
-    team2.save();
-    Match match = new Match(team1, team2);
+    Match match = TestBeanFactory.getMatch("1. FC Onion", "1. FC Garlic");
+    match.getTeam1().save();
+    match.getTeam2().save();
     match.save();
     assertNotNull(match.getId());
     // r
@@ -34,6 +31,7 @@ public class CrudTest {
     assertEquals(match.getId(), savedMatch.getId());
     assertEquals("1. FC Onion", savedMatch.getTeam1().getName());
     assertEquals("1. FC Garlic", savedMatch.getTeam2().getName());
+    assertNotNull(savedMatch.getStart());
   }
 
   @Test
