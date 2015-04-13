@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import beso.dao.SpringMongoTestConfig;
+import beso.model.Competition;
 import beso.model.Match;
 import beso.model.Odds;
 import beso.model.Team;
@@ -23,7 +24,8 @@ public class TestBeanFactory {
   public static Match getMatch(final String nameTeam1, final String nameTeam2) {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.YEAR, -1);
-    return new Match(getTeam(nameTeam1), getTeam(nameTeam2), calendar.getTime());
+    Competition competition = new Competition(Competition.FOOTBALL_BUNDESLIGA_1);
+    return new Match(competition, getTeam(nameTeam1), getTeam(nameTeam2), calendar.getTime());
   }
 
   public static Odds getOdds(final double rateTeam1, final double rateDraw, final double rateTeam2) {

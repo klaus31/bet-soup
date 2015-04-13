@@ -1,5 +1,6 @@
 package beso.model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,8 @@ import beso.dao.BesoDao;
 @Document(collection = "matches")
 public class Match implements Saveable {
 
+  @DBRef
+  private final Competition competition;
   private Integer goalsTeam1 = null;
   private Integer goalsTeam2 = null;
   @Id
@@ -22,10 +25,15 @@ public class Match implements Saveable {
   @DBRef
   private final Team team2;
 
-  public Match(final Team team1, final Team team2, final Date start) {
+  public Match(final Competition competition, final Team team1, final Team team2, final Date start) {
     this.team1 = team1;
     this.team2 = team2;
     this.start = start;
+    this.competition = competition;
+  }
+
+  public Competition getCompetition() {
+    return competition;
   }
 
   public Integer getGoalsTeam1() {
@@ -60,6 +68,7 @@ public class Match implements Saveable {
   public void save() {
     Beso.exitIf(team1.getId() == null, "store teams first");
     Beso.exitIf(team2.getId() == null, "store teams first");
+    Beso.exitIf(competition.getId() == null, "store competition first");
     BesoDao.me().save(this);
   }
 
@@ -70,5 +79,14 @@ public class Match implements Saveable {
 
   public void setId(final String id) { // TODO mach weg, wenns geht
     this.id = id;
+  }
+
+  public boolean startsAtSameDayAs(final Match match) {
+    Beso.exitIf(match == null);
+    Calendar helperCalendar = Calendar.getInstance();
+    helperCalendar.setTime(this.getStart());
+    final String checkString = helperCalendar.get(Calendar.DAY_OF_YEAR) + helperCalendar.get(Calendar.YEAR) + "";
+    helperCalendar.setTime(match.getStart());
+    return checkString.equals(helperCalendar.get(Calendar.DAY_OF_YEAR) + helperCalendar.get(Calendar.YEAR) + "");
   }
 }

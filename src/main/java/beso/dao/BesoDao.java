@@ -1,5 +1,6 @@
 package beso.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import beso.model.Competition;
 import beso.model.Match;
 import beso.model.Team;
 
@@ -36,8 +38,39 @@ public class BesoDao implements AutoCloseable {
     ((ConfigurableApplicationContext) defaultCtx).close();
   }
 
-  public List<Team> findTeams() {
-    return mongoOperation.findAll(Team.class);
+  public boolean exists(final Competition competition) {
+    return competition != null && competition.getName() != null && findCompetition("name", competition.getName()) != null;
+  }
+
+  public boolean exists(final Team team) {
+    return team != null && team.getName() != null && findTeam("name", team.getName()) != null;
+  }
+
+  private Competition findCompetition(final String key, final String value) {
+    Query query = new Query(Criteria.where(key).is(value));
+    return mongoOperation.findOne(query, Competition.class);
+  }
+
+  public List<Competition> findCompetitions() {
+    return mongoOperation.findAll(Competition.class);
+  }
+
+  public Competition findFootballBundesliga1st() {
+    Query query = new Query(Criteria.where("name").is(Competition.FOOTBALL_BUNDESLIGA_1));
+    return mongoOperation.findOne(query, Competition.class);
+  }
+
+  public Competition findFootballBundesliga2nd() {
+    Query query = new Query(Criteria.where("name").is(Competition.FOOTBALL_BUNDESLIGA_2));
+    return mongoOperation.findOne(query, Competition.class);
+  }
+
+  public Match findMatch(final Competition competition, final Team team1, final Team team2, final Date start) {
+    Query query = new Query(Criteria.where("competition").is(competition.getId()));
+    query.addCriteria(Criteria.where("team1").is(team1.getId()));
+    query.addCriteria(Criteria.where("team2").is(team2.getId()));
+    query.addCriteria(Criteria.where("start").is(start));
+    return mongoOperation.findOne(query, Match.class);
   }
 
   public Match findMatch(final String id) {
@@ -45,8 +78,18 @@ public class BesoDao implements AutoCloseable {
   }
 
   public Match findMatch(final String key, final Object value) {
-    Query searchTeamQuery = new Query(Criteria.where(key).is(value));
-    return mongoOperation.findOne(searchTeamQuery, Match.class);
+    Query query = new Query(Criteria.where(key).is(value));
+    return mongoOperation.findOne(query, Match.class);
+  }
+
+  public List<Match> findMatches() {
+    return mongoOperation.findAll(Match.class);
+  }
+
+  public List<Match> findMatchesWithoutResult(final Competition competition) {
+    Query query = new Query(Criteria.where("competition").is(competition.getId()));
+    query.addCriteria(Criteria.where("goalsTeam1").is(null));
+    return mongoOperation.find(query, Match.class);
   }
 
   public Team findTeam(final String id) {
@@ -54,13 +97,21 @@ public class BesoDao implements AutoCloseable {
   }
 
   public Team findTeam(final String key, final Object value) {
-    Query searchTeamQuery = new Query(Criteria.where(key).is(value));
-    return mongoOperation.findOne(searchTeamQuery, Team.class);
+    Query query = new Query(Criteria.where(key).is(value));
+    return mongoOperation.findOne(query, Team.class);
+  }
+
+  public List<Team> findTeams() {
+    return mongoOperation.findAll(Team.class);
+  }
+
+  public Team getTeam(final Team team) {
+    return findTeam("name", team.getName());
   }
 
   public void remove(final Team team) {
-    Query searchTeamQuery = new Query(Criteria.where("id").is(team.getId()));
-    mongoOperation.remove(searchTeamQuery, Team.class);
+    Query query = new Query(Criteria.where("id").is(team.getId()));
+    mongoOperation.remove(query, Team.class);
   }
 
   public void save(final Object objectToSave) {
@@ -72,7 +123,7 @@ public class BesoDao implements AutoCloseable {
   }
 
   public void update(final Team team, final String key, final Object newValue) {
-    Query searchTeamQuery = new Query(Criteria.where("id").is(team.getId()));
-    mongoOperation.updateFirst(searchTeamQuery, Update.update(key, newValue), Team.class);
+    Query query = new Query(Criteria.where("id").is(team.getId()));
+    mongoOperation.updateFirst(query, Update.update(key, newValue), Team.class);
   }
 }

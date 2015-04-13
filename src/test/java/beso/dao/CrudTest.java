@@ -1,5 +1,6 @@
 package beso.dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -10,7 +11,9 @@ import beso.model.Match;
 import beso.model.Team;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class CrudTest {
 
@@ -24,6 +27,7 @@ public class CrudTest {
     Match match = TestBeanFactory.getMatch("1. FC Onion", "1. FC Garlic");
     match.getTeam1().save();
     match.getTeam2().save();
+    match.getCompetition().save();
     match.save();
     assertNotNull(match.getId());
     // r
@@ -54,5 +58,13 @@ public class CrudTest {
     BesoDao.me().remove(team);
     List<Team> teams = BesoDao.me().findTeams();
     assertEquals(sizeBeforeRemove - 1, teams.size());
+  }
+
+  @Test
+  public void teamExists() {
+    Team team = TestBeanFactory.getTeam("Foo " + Calendar.getInstance().getTimeInMillis());
+    assertFalse(BesoDao.me().exists(team));
+    team.save();
+    assertTrue(BesoDao.me().exists(team));
   }
 }
