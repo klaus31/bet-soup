@@ -17,11 +17,11 @@ public class UrlReader {
 
   private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-  public static JSONArray getJsonArrayFromUrl(final String url) {
+  public static final JSONArray getJsonArrayFromUrl(final String url) {
     return getJsonArrayFromUrl(url, DEFAULT_CHARSET);
   }
 
-  public static JSONArray getJsonArrayFromUrl(final String url, final Charset charset) {
+  public static final JSONArray getJsonArrayFromUrl(final String url, final Charset charset) {
     try {
       JSONArray json = new JSONArray(getStringFromUrl(url, charset));
       return json;
@@ -31,11 +31,11 @@ public class UrlReader {
     }
   }
 
-  public static JSONObject getJsonObjectFromUrl(final String url) {
+  public static final JSONObject getJsonObjectFromUrl(final String url) {
     return getJsonObjectFromUrl(url, DEFAULT_CHARSET);
   }
 
-  public static JSONObject getJsonObjectFromUrl(final String url, final Charset charset) {
+  public static final JSONObject getJsonObjectFromUrl(final String url, final Charset charset) {
     try {
       JSONObject json = new JSONObject(getStringFromUrl(url, charset));
       return json;
@@ -45,11 +45,11 @@ public class UrlReader {
     }
   }
 
-  public static String getStringFromUrl(final String url) {
+  public static final String getStringFromUrl(final String url) {
     return getStringFromUrl(url, DEFAULT_CHARSET);
   }
 
-  public static String getStringFromUrl(final String url, final Charset charset) {
+  public static final String getStringFromUrl(final String url, final Charset charset) {
     System.out.println("requesting " + url);
     BufferedReader rd = null;
     try {
@@ -67,7 +67,7 @@ public class UrlReader {
     }
   }
 
-  private static String readAll(final Reader rd) throws IOException {
+  private static final String readAll(final Reader rd) throws IOException {
     StringBuilder sb = new StringBuilder();
     int cp;
     while ((cp = rd.read()) != -1) {

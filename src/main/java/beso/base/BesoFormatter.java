@@ -14,8 +14,8 @@ public class BesoFormatter {
     return new SimpleDateFormat("dd.MM.yy HH:mm").format(date);
   }
 
-  public static String format(final Date start, final Team team1, final Team team2) {
-    return format(start) + " " + format(team1, team2);
+  private static String format(final Date start, final Team team1, final Team team2) {
+    return format(start) + "  " + format(team1, team2);
   }
 
   public static String format(final Match match) {
@@ -26,7 +26,7 @@ public class BesoFormatter {
     return team.getName();
   }
 
-  public static String format(final Team team1, final Team team2) {
+  private static String format(final Team team1, final Team team2) {
     String result1 = team1.getName() + " ";
     while (result1.length() < MIN_CHARCOUNT_TEAM_NAME) {
       result1 += ".";

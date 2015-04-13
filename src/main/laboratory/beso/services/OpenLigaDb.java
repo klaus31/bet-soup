@@ -38,8 +38,8 @@ public class OpenLigaDb {
     final Team team1 = getTeam(matchJson.getJSONObject("Team1"));
     final Team team2 = getTeam(matchJson.getJSONObject("Team2"));
     // start
-    String timestamp = matchJson.getString("MatchDateTimeUTC");
-    DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(timestamp);
+    final String timestamp = matchJson.getString("MatchDateTimeUTC");
+    final DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(timestamp);
     // create match
     Match match = BesoDao.me().findMatch(competition, team1, team2, dateTime.toDate());
     if (match == null) {
@@ -59,11 +59,11 @@ public class OpenLigaDb {
   }
 
   public List<Match> getMatchData(final int year) {
-    List<Match> matches = new ArrayList<>();
-    String url = String.format("http://www.openligadb.de/api/getmatchdata/%s/%s", getLeagueShortcut(), year);
-    JSONArray matchesJson = UrlReader.getJsonArrayFromUrl(url);
+    final List<Match> matches = new ArrayList<>();
+    final String url = String.format("http://www.openligadb.de/api/getmatchdata/%s/%s", getLeagueShortcut(), year);
+    final JSONArray matchesJson = UrlReader.getJsonArrayFromUrl(url);
     for (int index = 0; index < matchesJson.length(); index++) {
-      JSONObject matchJson = matchesJson.getJSONObject(index);
+      final JSONObject matchJson = matchesJson.getJSONObject(index);
       matches.add(getMatch(matchJson));
     }
     return matches;

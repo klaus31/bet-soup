@@ -6,7 +6,7 @@ import beso.model.Competition;
 public class AddAllCompetitions {
 
   public static void main(final String... args) {
-    AddAllCompetitions step = new AddAllCompetitions();
+    final AddAllCompetitions step = new AddAllCompetitions();
     step.start();
   }
 

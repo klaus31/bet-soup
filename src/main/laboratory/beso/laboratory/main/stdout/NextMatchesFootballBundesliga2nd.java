@@ -10,13 +10,13 @@ import beso.model.Match;
 public class NextMatchesFootballBundesliga2nd {
 
   public static void main(final String... args) {
-    NextMatchesFootballBundesliga2nd main = new NextMatchesFootballBundesliga2nd();
+    final NextMatchesFootballBundesliga2nd main = new NextMatchesFootballBundesliga2nd();
     main.start();
   }
 
   private void start() {
     final Competition competition = BesoDao.me().findFootballBundesliga2nd();
-    List<Match> matches = BesoDao.me().findMatchesWithoutResult(competition);
+    final List<Match> matches = BesoDao.me().findMatchesWithoutResult(competition);
     Match previousInList = null;
     for (Match match : matches) {
       if (previousInList != null && !previousInList.startsAtSameDayAs(match)) {

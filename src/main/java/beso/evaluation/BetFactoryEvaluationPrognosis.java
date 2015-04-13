@@ -18,7 +18,7 @@ public class BetFactoryEvaluationPrognosis implements BetFactoryEvaluation {
     int win = 0;
     int fail = 0;
     for (Odds matchOdds : matchesOdds) {
-      Outcome outcome = OutcomeFactory.get(factory, matchOdds);
+      final Outcome outcome = OutcomeFactory.get(factory, matchOdds);
       if (outcome == WIN) {
         win++;
       } else if (outcome == FAIL) {

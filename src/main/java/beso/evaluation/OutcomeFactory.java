@@ -17,7 +17,7 @@ class OutcomeFactory {
     if (!odds.getMatch().isFinished()) {
       return Outcome.UNKNOWN;
     }
-    Bet bet = factory.getBet(odds);
+    final Bet bet = factory.getBet(odds);
     if (bet == null || bet == AMBIGUOUS) {
       return UNKNOWN;
     }
