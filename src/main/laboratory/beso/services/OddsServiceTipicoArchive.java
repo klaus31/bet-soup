@@ -1,15 +1,17 @@
 package beso.services;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import beso.base.BesoFormatter;
 import beso.model.Competition;
 import beso.model.Match;
 import beso.model.Odds;
 
-public class Tipico extends OddsServiceAbstract {
+public class OddsServiceTipicoArchive extends OddsServiceAbstract {
 
-  public Tipico(final List<Match> matches) {
+  public OddsServiceTipicoArchive(final List<Match> matches) {
     super(matches);
   }
 
@@ -24,29 +26,30 @@ public class Tipico extends OddsServiceAbstract {
 
   @Override
   Odds getOdds(final Match match, final String content) {
-    final String team1 = getTipicoUnambiguousStringForTeam(match.getTeam1().getName());
-    final String team2 = getTipicoUnambiguousStringForTeam(match.getTeam2().getName());
+    final String teamMarker1 = getTipicoTeamRegex(match.getTeam1().getName());
+    final String teamMarker2 = getTipicoTeamRegex(match.getTeam2().getName());
     try {
-      String part = content.substring(content.indexOf("Archiv") + 1);
-      part = part.substring(part.indexOf("Archiv") + 1);
-      part = part.substring(part.indexOf("Archiv") + 1);
-      part = part.substring(part.indexOf(team1));
-      if (part.indexOf(team2) > 50) { // two matchdays this week and this is the second match (hopefully)
-        part = part.substring(part.indexOf(team1));
+      String contentCut = content.substring(endOf(".+Archiv.+?" + new SimpleDateFormat("dd.MM").format(match.getStart()), content)).trim();
+      contentCut = contentCut.substring(0, contentCut.indexOf("Wettschein"));
+      final String regex = teamMarker1 + ".+?" + match.getGoalsTeam1() + ":" + match.getGoalsTeam2() + ".+?" + teamMarker2 + ".+?[1-9]";
+      final int finalCutAt = endOf(regex, contentCut) - 1;
+      if (finalCutAt < 0) {
+        System.err.println("Tipico service failed: " + BesoFormatter.format(match) + " (" + teamMarker1 + ":" + teamMarker2 + ")");
+        return null;
       }
-      part = part.substring(part.indexOf(team2) + team2.length());
-      part = part.substring(0, 20).trim();
-      final String[] oddsString = part.split(" ");
+      contentCut = contentCut.substring(finalCutAt).trim();
+      final String[] oddsString = contentCut.split(" ");
       final double rateTeam1 = Double.parseDouble(oddsString[0].replace(',', '.'));
       final double rateDraw = Double.parseDouble(oddsString[1].replace(',', '.'));
       final double rateTeam2 = Double.parseDouble(oddsString[2].replace(',', '.'));
       return new Odds(match, rateTeam1, rateDraw, rateTeam2);
     } catch (Exception e) {
+      System.err.println("Tipico service failed: " + BesoFormatter.format(match) + " (" + teamMarker1 + ":" + teamMarker2 + ")");
       return null;
     }
   }
 
-  private String getTipicoUnambiguousStringForTeam(final String defaultTeamName) {
+  private String getTipicoTeamRegex(final String defaultTeamName) {
     switch (defaultTeamName) {
     case "Bayer 04 Leverkusen":
       return "Leverkusen";
@@ -55,13 +58,13 @@ public class Tipico extends OddsServiceAbstract {
     case "1. FSV Mainz 05":
       return "Mainz";
     case "1. FC Nürnberg":
-      return "Nürnberg";
+      return "N(ü|u|ue)rnberg";
     case "1. FC Köln":
-      return "Köln";
+      return "K(ö|o|oe)ln";
     case "Borussia Dortmund":
       return "Dortmund";
     case "Bayern München":
-      return "München";
+      return "M(ü|u|ue)nchen";
     case "1. FC Heidenheim 1846":
       return "Heidenheim";
     case "SV Darmstadt 98":
@@ -76,7 +79,7 @@ public class Tipico extends OddsServiceAbstract {
       return "Regensburg";
     case "FC Erzgebirge Aue":
     case "Erzgebirge Aue":
-      return "Aue";
+      return "(Aue|AUE)";
     case "FC Hansa Rostock":
       return "Rostock";
     case "SG Dynamo Dresden":
@@ -90,13 +93,13 @@ public class Tipico extends OddsServiceAbstract {
     case "Alemannia Aachen":
       return "Aachen";
     case "Rot-Weiss Oberhausen":
-      return "Oberhausen";
+      return "Ober\\.?";
     case "Eintracht Braunschweig":
       return "Braunschweig";
     case "SpVgg Greuther Fuerth":
-      return "Fuerth";
+      return "F(ü|u|ue)rth";
     case "Fortuna Düsseldorf":
-      return "Düsseldorf";
+      return "D(ü|u|ue)sseldorf";
     case "Arminia Bielefeld":
       return "Bielefeld";
     case "FC Ingolstadt 04":
@@ -110,7 +113,7 @@ public class Tipico extends OddsServiceAbstract {
     case "VfL Wolfsburg":
       return "Wolfsburg";
     case "Hamburger SV":
-      return "Hamburg";
+      return "(Hamburg|HSV)";
     case "Hannover 96":
       return "Hannover";
     case "Werder Bremen":
@@ -118,9 +121,9 @@ public class Tipico extends OddsServiceAbstract {
     case "FC St. Pauli":
       return "Pauli";
     case "Eintracht Frankfurt":
+      return "Eintracht Frankfurt";
     case "FSV Frankfurt":
-      // XXX this does not work if FSV and Eintracht are playing the same competition the week
-      return "Frankfurt";
+      return "FSV";
     case "VfB Stuttgart":
       return "Stuttgart";
     case "Hertha BSC":
@@ -129,6 +132,8 @@ public class Tipico extends OddsServiceAbstract {
       return "Duisburg";
     case "FC Augsburg":
       return "Augsburg";
+    case "VfL Osnabrück":
+      return "Osnabr(ü|u|ue)ck";
     case "SC Freiburg":
       return "Freiburg";
     case "SC Paderborn 07":
@@ -140,7 +145,7 @@ public class Tipico extends OddsServiceAbstract {
       // Kaiserslautern, K'lautern ...
       return "lautern";
     default:
-      System.out.println(defaultTeamName);
+      System.err.println(defaultTeamName);
       return defaultTeamName;
     }
   }
@@ -152,6 +157,8 @@ public class Tipico extends OddsServiceAbstract {
     }
     final String urlFormat = "https://www.tipico.de/de/ergebnisse/fussball/deutschland/%s/%s/kw%s/";
     final String leagueShortcut = getLeagueShortcut(match.getCompetition());
-    return String.format(urlFormat, leagueShortcut, match.getStartCalendar().get(Calendar.YEAR), match.getStartCalendar().get(Calendar.WEEK_OF_YEAR));
+    Calendar start = match.getStartCalendar();
+    start.setFirstDayOfWeek(Calendar.MONDAY);
+    return String.format(urlFormat, leagueShortcut, start.get(Calendar.YEAR), start.get(Calendar.WEEK_OF_YEAR));
   }
 }

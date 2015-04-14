@@ -47,8 +47,8 @@ public class BesoFormatter {
 
   public static String format(final Match match) {
     final String dateAndName = format(match.getStart(), match.getTeam1(), match.getTeam2());
-    final String format = "( %s : %s )";
-    final String matchResult = match.isFinished() ? String.format(format, match.getGoalsTeam1(), match.getGoalsTeam1()) : String.format(format, "?", "?");
+    final String format = "%s:%s";
+    final String matchResult = match.isFinished() ? String.format(format, match.getGoalsTeam1(), match.getGoalsTeam2()) : String.format(format, "?", "?");
     return dateAndName + "  " + matchResult;
   }
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 
@@ -54,4 +56,9 @@ abstract class OddsServiceAbstract implements OddsService {
   }
 
   abstract String getUrl(Match match);
+
+  protected int endOf(final String regex, final String subject) {
+    final Matcher matcher = Pattern.compile(regex).matcher(subject);
+    return matcher.find() ? matcher.end() : -1;
+  }
 }

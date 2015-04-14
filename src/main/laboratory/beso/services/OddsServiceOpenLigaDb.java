@@ -14,11 +14,11 @@ import beso.model.Competition;
 import beso.model.Match;
 import beso.model.Team;
 
-public class OpenLigaDb {
+public class OddsServiceOpenLigaDb {
 
   private final Competition competition;
 
-  public OpenLigaDb(final Competition competition) {
+  public OddsServiceOpenLigaDb(final Competition competition) {
     if (!BesoDao.me().exists(competition)) {
       competition.save();
     }
@@ -49,7 +49,7 @@ public class OpenLigaDb {
       final JSONArray matchResults = matchJson.getJSONArray("MatchResults");
       if (matchResults.length() == 2) {
         JSONObject matchResult = matchResults.getJSONObject(0);
-        if (!matchResult.getString("ResultName").equals("Endergebnis")) {
+        if (matchResult.getInt("ResultOrderID") != 1) {
           matchResult = matchResults.getJSONObject(1);
         }
         match.setGoals(matchResult.getInt("PointsTeam1"), matchResult.getInt("PointsTeam2"));
