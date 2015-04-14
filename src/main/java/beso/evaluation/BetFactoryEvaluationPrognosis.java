@@ -4,7 +4,7 @@ import java.util.List;
 
 import beso.model.Odds;
 import beso.recommendation.BetFactory;
-import static beso.evaluation.Outcome.FAIL;
+import static beso.evaluation.Outcome.LOOSE;
 import static beso.evaluation.Outcome.WIN;
 
 public class BetFactoryEvaluationPrognosis implements BetFactoryEvaluation {
@@ -21,7 +21,7 @@ public class BetFactoryEvaluationPrognosis implements BetFactoryEvaluation {
       final Outcome outcome = OutcomeFactory.get(factory, matchOdds);
       if (outcome == WIN) {
         win++;
-      } else if (outcome == FAIL) {
+      } else if (outcome == LOOSE) {
         fail++;
       }
     }

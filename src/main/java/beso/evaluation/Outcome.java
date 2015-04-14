@@ -1,5 +1,5 @@
 package beso.evaluation;
 
-enum Outcome {
-  FAIL, UNKNOWN, WIN
+public enum Outcome {
+  LOOSE, UNKNOWN, WIN
 }

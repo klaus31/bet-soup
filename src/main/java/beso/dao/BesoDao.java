@@ -119,6 +119,12 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.findAll(Odds.class);
   }
 
+  public List<Odds> findOdds(final int limit) {
+    final Query query = new Query();
+    query.limit(limit);
+    return mongoOperation.find(query, Odds.class);
+  }
+
   public Odds findOdds(final Match match) {
     final Query query = new Query(Criteria.where("match").is(match));
     return mongoOperation.findOne(query, Odds.class);

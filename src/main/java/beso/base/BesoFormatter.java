@@ -1,14 +1,18 @@
 package beso.base;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
+import beso.evaluation.Outcome;
 import beso.model.Competition;
 import beso.model.Match;
 import beso.model.Odds;
 import beso.model.Team;
+import beso.stake.Profit;
+import beso.stake.Stake;
 
 public class BesoFormatter {
 
@@ -45,6 +49,11 @@ public class BesoFormatter {
     return format(start) + "  " + format(team1, team2);
   }
 
+  public static String format(final double number, final String pattern) {
+    final DecimalFormat df = new DecimalFormat(pattern);
+    return df.format(number);
+  }
+
   public static String format(final Match match) {
     final String dateAndName = format(match.getStart(), match.getTeam1(), match.getTeam2());
     final String format = "%s:%s";
@@ -53,10 +62,26 @@ public class BesoFormatter {
   }
 
   public static String format(final Odds odds) {
-    String rateTeam1 = appendToLength(odds.getRateTeam1(), 4);
-    String rateTeam2 = appendToLength(odds.getRateTeam2(), 4);
-    String rateDraw = appendToLength(odds.getRateDraw(), 4);
-    return format(odds.getMatch()) + "  " + String.format("%s | %s | %s", rateTeam1, rateDraw, rateTeam2);
+    final String rateTeam1 = format(odds.getRateTeam1(), "0.00");
+    final String rateTeam2 = format(odds.getRateTeam2(), "0.00");
+    final String rateDraw = format(odds.getRateDraw(), "0.00");
+    final String rates = String.format("%s|%s|%s", rateTeam1, rateDraw, rateTeam2);
+    return format(odds.getMatch()) + "  " + rates;
+  }
+
+  private static String format(final Outcome outcome) {
+    switch (outcome) {
+    case WIN:
+      return "WIN  ";
+    case LOOSE:
+      return "FAIL ";
+    default:
+      return "???  ";
+    }
+  }
+
+  public static Object format(final Profit profit) {
+    return formatEuro(profit.getValue());
   }
 
   public static String format(final Team team) {
@@ -69,10 +94,31 @@ public class BesoFormatter {
     return result1 + result2;
   }
 
+  private static String formatEuro(final double value) {
+    return format(value, "0.00 €");
+  }
+
+  public static String formatPercent(final Double number) {
+    final DecimalFormat df = new DecimalFormat("0.00 %");
+    return df.format(number);
+  }
+
+  public static String formatVerbose(final Stake stake) {
+    final Odds odds = stake.getOdds();
+    final Double profitChance = stake.getProfitChance();
+    final Double value = stake.getValue();
+    final Outcome outcome = stake.getOutcome();
+    return format(odds) + "  " + prependToLength(formatEuro(value), 9) + "  " + prependToLength(formatEuro(profitChance), 9) + " " + format(outcome);
+  }
+
   private static String prependToLength(final char character, final String subject, final int length) {
     if (subject.length() < length) {
       return StringUtils.repeat(character, length - subject.length()) + subject;
     }
     return subject;
+  }
+
+  private static String prependToLength(final String subject, final int length) {
+    return prependToLength(' ', subject, length);
   }
 }

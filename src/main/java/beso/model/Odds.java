@@ -1,5 +1,8 @@
 package beso.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,6 +11,14 @@ import beso.dao.BesoDao;
 
 @Document(collection = "odds")
 public class Odds implements Saveable {
+
+  public static List<Match> getMatches(final List<Odds> odds) {
+    List<Match> matches = new ArrayList<>(odds.size());
+    for (Odds oddsOfMatch : odds) {
+      matches.add(oddsOfMatch.getMatch());
+    }
+    return matches;
+  }
 
   @Id
   private String id;
@@ -28,6 +39,22 @@ public class Odds implements Saveable {
     return match;
   }
 
+  public Double getRate(final Bet bet) {
+    if (bet == null) {
+      return null;
+    }
+    switch (bet) {
+    case TEAM_1_WIN:
+      return rateTeam1;
+    case TEAM_2_WIN:
+      return rateTeam2;
+    case DRAW:
+      return rateDraw;
+    default:
+      return 0D;
+    }
+  }
+
   public double getRateDraw() {
     return rateDraw;
   }
@@ -43,6 +70,5 @@ public class Odds implements Saveable {
   @Override
   public void save() {
     BesoDao.me().save(this);
-    match.save();
   }
 }
