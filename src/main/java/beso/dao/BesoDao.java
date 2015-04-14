@@ -86,6 +86,17 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.findAll(Match.class);
   }
 
+  public List<Match> findMatchesFinishedAndWithoutOdds() {
+    final Query query = new Query(Criteria.where("odds").is(null));
+    query.addCriteria(Criteria.where("goalsTeam1").ne(null));
+    return mongoOperation.find(query, Match.class);
+  }
+
+  public List<Match> findMatchesWithoutOdds() {
+    final Query query = new Query(Criteria.where("odds").is(null));
+    return mongoOperation.find(query, Match.class);
+  }
+
   public List<Match> findMatchesWithoutResult(final Competition competition) {
     final Query query = new Query(Criteria.where("competition").is(competition.getId()));
     query.addCriteria(Criteria.where("goalsTeam1").is(null));
@@ -101,12 +112,12 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.findOne(query, Team.class);
   }
 
-  public List<Team> findTeams() {
-    return mongoOperation.findAll(Team.class);
+  public Team findTeam(final Team team) {
+    return findTeam("name", team.getName());
   }
 
-  public Team getTeam(final Team team) {
-    return findTeam("name", team.getName());
+  public List<Team> findTeams() {
+    return mongoOperation.findAll(Team.class);
   }
 
   public void remove(final Team team) {

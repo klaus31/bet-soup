@@ -19,6 +19,8 @@ public class Match implements Saveable {
   private Integer goalsTeam2 = null;
   @Id
   private String id;
+  @DBRef
+  private Odds odds = null;
   private final Date start;
   @DBRef
   private final Team team1;
@@ -48,8 +50,18 @@ public class Match implements Saveable {
     return id;
   }
 
+  public Odds getOdds() {
+    return odds;
+  }
+
   public Date getStart() {
     return start;
+  }
+
+  public Calendar getStartCalendar() {
+    Calendar result = Calendar.getInstance();
+    result.setTime(this.start);
+    return result;
   }
 
   public Team getTeam1() {
@@ -79,6 +91,10 @@ public class Match implements Saveable {
 
   public void setId(final String id) { // TODO mach weg, wenns geht
     this.id = id;
+  }
+
+  public void setOdds(final Odds odds) {
+    this.odds = odds;
   }
 
   public boolean startsAtSameDayAs(final Match match) {

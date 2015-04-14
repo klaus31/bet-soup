@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import beso.model.Match;
+import beso.model.Odds;
 import beso.model.Team;
 
 public class BesoFormatter {
@@ -20,6 +21,10 @@ public class BesoFormatter {
 
   public static String format(final Match match) {
     return format(match.getStart(), match.getTeam1(), match.getTeam2());
+  }
+
+  public static String format(final Odds odds) {
+    return format(odds.getMatch()) + "  " + String.format("%s | %s | %s", odds.getRateTeam1(), odds.getRateDraw(), odds.getRateTeam2());
   }
 
   public static String format(final Team team) {

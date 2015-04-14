@@ -18,10 +18,11 @@ public class Odds implements Saveable {
   private final double rateTeam2;
 
   public Odds(final Match match, final double rateTeam1, final double rateDraw, final double rateTeam2) {
+    match.setOdds(this);
     this.match = match;
     this.rateTeam1 = rateTeam1;
-    this.rateDraw = rateDraw;
     this.rateTeam2 = rateTeam2;
+    this.rateDraw = rateDraw;
   }
 
   public Match getMatch() {
@@ -43,5 +44,6 @@ public class Odds implements Saveable {
   @Override
   public void save() {
     BesoDao.me().save(this);
+    match.save();
   }
 }

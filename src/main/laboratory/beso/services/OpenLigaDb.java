@@ -75,7 +75,7 @@ public class OpenLigaDb {
     if (!BesoDao.me().exists(team)) {
       team.save();
     } else {
-      team = BesoDao.me().getTeam(team);
+      team = BesoDao.me().findTeam(team);
     }
     return team;
   }

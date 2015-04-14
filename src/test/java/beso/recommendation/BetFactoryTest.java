@@ -22,7 +22,7 @@ public class BetFactoryTest {
   }
 
   @Test
-  public void getBetWhenQuoteBetween() {
+  public void getBetWhenOddsBetween() {
     BetFactory factory = new BetFactoryRateBetween(1D, 1.5D);
     assertEquals(TEAM_1_WIN, factory.getBet(new Odds(match, 1, 2, 3)));
     assertEquals(TEAM_2_WIN, factory.getBet(new Odds(match, 1.51, 2, 1.3)));
