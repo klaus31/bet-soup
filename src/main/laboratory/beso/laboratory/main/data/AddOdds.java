@@ -19,7 +19,7 @@ public class AddOdds {
   // insert all matches of all known competitions of the last 5 years
   private void start() {
     final List<Match> matches = BesoDao.me().findMatchesFinishedAndWithoutOdds();
-    final OddsService oddsService = new Tipico(matches);
+    final OddsService oddsService = new Tipico(matches.subList(0, 1));
     final List<Odds> oddsFound = oddsService.getOddsFound();
     for (Odds odds : oddsFound) {
       System.out.println(BesoFormatter.format(odds));

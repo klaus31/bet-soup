@@ -19,8 +19,6 @@ public class Match implements Saveable {
   private Integer goalsTeam2 = null;
   @Id
   private String id;
-  @DBRef
-  private Odds odds = null;
   private final Date start;
   @DBRef
   private final Team team1;
@@ -51,7 +49,7 @@ public class Match implements Saveable {
   }
 
   public Odds getOdds() {
-    return odds;
+    return BesoDao.me().findOdds(this);
   }
 
   public Date getStart() {
@@ -91,10 +89,6 @@ public class Match implements Saveable {
 
   public void setId(final String id) { // TODO mach weg, wenns geht
     this.id = id;
-  }
-
-  public void setOdds(final Odds odds) {
-    this.odds = odds;
   }
 
   public boolean startsAtSameDayAs(final Match match) {

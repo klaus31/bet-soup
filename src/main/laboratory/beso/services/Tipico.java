@@ -24,14 +24,14 @@ public class Tipico extends OddsServiceAbstract {
 
   @Override
   Odds getOdds(final Match match, final String content) {
-    final String team1 = getTipicoTeamName(match.getTeam1().getName());
-    final String team2 = getTipicoTeamName(match.getTeam2().getName());
+    final String team1 = getTipicoUnambiguousStringForTeam(match.getTeam1().getName());
+    final String team2 = getTipicoUnambiguousStringForTeam(match.getTeam2().getName());
     try {
       String part = content.substring(content.indexOf("Archiv") + 1);
       part = part.substring(part.indexOf("Archiv") + 1);
       part = part.substring(part.indexOf("Archiv") + 1);
       part = part.substring(part.indexOf(team1));
-      if (part.indexOf(team2) > 50) {
+      if (part.indexOf(team2) > 50) { // two matchdays this week and this is the second match (hopefully)
         part = part.substring(part.indexOf(team1));
       }
       part = part.substring(part.indexOf(team2) + team2.length());
@@ -46,70 +46,103 @@ public class Tipico extends OddsServiceAbstract {
     }
   }
 
-  private String getTipicoTeamName(final String defaultTeamName) {
-    String result = defaultTeamName;
-    if (result.equals("Bayer 04 Leverkusen")) {
-      result = "Bayer Leverkusen";
-    } else if (result.equals("TSG 1899 Hoffenheim")) {
-      result = "Hoffenheim";
-    } else if (result.equals("1. FSV Mainz 05")) {
-      result = "FSV Mainz 05";
-    } else if (result.equals("1. FC Köln")) {
-      result = "1.FC Köln";
-    } else if (result.equals("Borussia Dortmund")) {
-      result = "Dortmund";
-    } else if (result.equals("Bayern München")) {
-      result = "München";
-    } else if (result.equals("1. FC Heidenheim 1846")) {
-      result = "Heidenheim";
-    } else if (result.equals("SV Darmstadt 98")) {
-      result = "Darmstadt";
-    } else if (result.equals("RB Leipzig")) {
-      result = "Leipzig";
-    } else if (result.equals("SV Sandhausen")) {
-      result = "Sandhausen";
-    } else if (result.equals("VfR Aalen")) {
-      result = "Aalen";
-    } else if (result.equals("Jahn Regensburg")) {
-      result = "Regensburg";
-    } else if (result.equals("FC Erzgebirge Aue") || result.equals("Erzgebirge Aue")) {
-      result = "Aue";
-    } else if (result.equals("FC Hansa Rostock")) {
-      result = "Rostock";
-    } else if (result.equals("SG Dynamo Dresden")) {
-      result = "Dresden";
-    } else if (result.equals("TSV 1860 München")) {
-      result = "1860";
-    } else if (result.equals("VfL Bochum")) {
-      result = "Bochum";
-    } else if (result.equals("1. FC Union Berlin")) {
-      result = "Union Berlin";
-    } else if (result.equals("Alemannia Aachen")) {
-      result = "Aachen";
-    } else if (result.equals("Rot-Weiss Oberhausen")) {
-      result = "Oberhausen";
-    } else if (result.equals("Eintracht Braunschweig")) {
-      result = "Braunschweig";
-    } else if (result.equals("SpVgg Greuther Fuerth")) {
-      result = "Fuerth";
-    } else if (result.equals("Fortuna Düsseldorf")) {
-      result = "Düsseldorf";
-    } else if (result.equals("Arminia Bielefeld")) {
-      result = "Bielefeld";
-    } else if (result.equals("FC Ingolstadt 04")) {
-      result = "Ingolstadt";
-    } else if (result.equals("Energie Cottbus")) {
-      result = "Cottbus";
-    } else if (result.equals("Karlsruher SC")) {
-      result = "Karlsruher";
-    } else if (result.equals("FC Schalke 04")) {
-      result = "Schalke";
-    } else if (result.equals("SC Paderborn 07")) {
-      result = "Paderborn";
-    } else if (result.equals("Borussia Mönchengladbach")) {
-      result = "M'gladbach";
+  private String getTipicoUnambiguousStringForTeam(final String defaultTeamName) {
+    switch (defaultTeamName) {
+    case "Bayer 04 Leverkusen":
+      return "Leverkusen";
+    case "TSG 1899 Hoffenheim":
+      return "Hoffenheim";
+    case "1. FSV Mainz 05":
+      return "Mainz";
+    case "1. FC Nürnberg":
+      return "Nürnberg";
+    case "1. FC Köln":
+      return "Köln";
+    case "Borussia Dortmund":
+      return "Dortmund";
+    case "Bayern München":
+      return "München";
+    case "1. FC Heidenheim 1846":
+      return "Heidenheim";
+    case "SV Darmstadt 98":
+      return "Darmstadt";
+    case "RB Leipzig":
+      return "Leipzig";
+    case "SV Sandhausen":
+      return "Sandhausen";
+    case "VfR Aalen":
+      return "Aalen";
+    case "Jahn Regensburg":
+      return "Regensburg";
+    case "FC Erzgebirge Aue":
+    case "Erzgebirge Aue":
+      return "Aue";
+    case "FC Hansa Rostock":
+      return "Rostock";
+    case "SG Dynamo Dresden":
+      return "Dresden";
+    case "TSV 1860 München":
+      return "1860";
+    case "VfL Bochum":
+      return "Bochum";
+    case "1. FC Union Berlin":
+      return "Union Berlin";
+    case "Alemannia Aachen":
+      return "Aachen";
+    case "Rot-Weiss Oberhausen":
+      return "Oberhausen";
+    case "Eintracht Braunschweig":
+      return "Braunschweig";
+    case "SpVgg Greuther Fuerth":
+      return "Fuerth";
+    case "Fortuna Düsseldorf":
+      return "Düsseldorf";
+    case "Arminia Bielefeld":
+      return "Bielefeld";
+    case "FC Ingolstadt 04":
+      return "Ingolstadt";
+    case "Energie Cottbus":
+      return "Cottbus";
+    case "Karlsruher SC":
+      return "Karlsruher";
+    case "FC Schalke 04":
+      return "Schalke";
+    case "VfL Wolfsburg":
+      return "Wolfsburg";
+    case "Hamburger SV":
+      return "Hamburg";
+    case "Hannover 96":
+      return "Hannover";
+    case "Werder Bremen":
+      return "Bremen";
+    case "FC St. Pauli":
+      return "Pauli";
+    case "Eintracht Frankfurt":
+    case "FSV Frankfurt":
+      // XXX this does not work if FSV and Eintracht are playing the same competition the week
+      return "Frankfurt";
+    case "VfB Stuttgart":
+      return "Stuttgart";
+    case "Hertha BSC":
+      return "Hertha";
+    case "MSV Duisburg":
+      return "Duisburg";
+    case "FC Augsburg":
+      return "Augsburg";
+    case "SC Freiburg":
+      return "Freiburg";
+    case "SC Paderborn 07":
+      return "Paderborn";
+    case "Borussia Mönchengladbach":
+      // Mönchengladbach, M'gladbach, M'Gladbach ...
+      return "ladbach";
+    case "1. FC Kaiserslautern":
+      // Kaiserslautern, K'lautern ...
+      return "lautern";
+    default:
+      System.out.println(defaultTeamName);
+      return defaultTeamName;
     }
-    return result;
   }
 
   @Override

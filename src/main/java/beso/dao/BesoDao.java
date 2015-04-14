@@ -1,5 +1,6 @@
 package beso.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import beso.model.Competition;
 import beso.model.Match;
+import beso.model.Odds;
 import beso.model.Team;
 
 public class BesoDao implements AutoCloseable {
@@ -86,21 +88,40 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.findAll(Match.class);
   }
 
-  public List<Match> findMatchesFinishedAndWithoutOdds() {
-    final Query query = new Query(Criteria.where("odds").is(null));
-    query.addCriteria(Criteria.where("goalsTeam1").ne(null));
+  public List<Match> findMatchesFinished() {
+    final Query query = new Query(Criteria.where("goalsTeam1").ne(null));
     return mongoOperation.find(query, Match.class);
   }
 
-  public List<Match> findMatchesWithoutOdds() {
-    final Query query = new Query(Criteria.where("odds").is(null));
+  public List<Match> findMatchesFinishedAndWithoutOdds() {
+    final List<Match> matchesFinished = findMatchesFinished();
+    final List<Match> matches = new ArrayList<>();
+    for (Match match : matchesFinished) {
+      if (match.getOdds() == null) {
+        matches.add(match);
+      }
+    }
+    return matches;
+  }
+
+  public List<Match> findMatchesWithoutResult() {
+    final Query query = new Query(Criteria.where("goalsTeam1").is(null));
     return mongoOperation.find(query, Match.class);
   }
 
   public List<Match> findMatchesWithoutResult(final Competition competition) {
-    final Query query = new Query(Criteria.where("competition").is(competition.getId()));
+    final Query query = new Query(Criteria.where("competition").is(competition));
     query.addCriteria(Criteria.where("goalsTeam1").is(null));
     return mongoOperation.find(query, Match.class);
+  }
+
+  public List<Odds> findOdds() {
+    return mongoOperation.findAll(Odds.class);
+  }
+
+  public Odds findOdds(final Match match) {
+    final Query query = new Query(Criteria.where("match").is(match));
+    return mongoOperation.findOne(query, Odds.class);
   }
 
   public Team findTeam(final String id) {
