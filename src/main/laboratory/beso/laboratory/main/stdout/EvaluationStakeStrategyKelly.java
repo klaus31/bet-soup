@@ -8,13 +8,12 @@ import beso.model.Odds;
 import beso.recommendation.BetFactory;
 import beso.recommendation.BetFactoryRateBetween;
 import beso.stake.Stake;
-import beso.stake.StakeStrategy;
 import beso.stake.StakeStrategyKelly;
 
-public class StakeStrategyKellyForLastTenMatches {
+public class EvaluationStakeStrategyKelly {
 
   public static void main(final String... args) {
-    final StakeStrategyKellyForLastTenMatches main = new StakeStrategyKellyForLastTenMatches();
+    final EvaluationStakeStrategyKelly main = new EvaluationStakeStrategyKelly();
     main.start();
   }
 
@@ -22,7 +21,8 @@ public class StakeStrategyKellyForLastTenMatches {
     List<Odds> odds = BesoDao.me().findOdds(10);
     final double totalStake = 100;
     final BetFactory factory = new BetFactoryRateBetween(1, 1.5);
-    final StakeStrategy stakeStrategy = new StakeStrategyKelly(factory, odds);
+    final StakeStrategyKelly stakeStrategy = new StakeStrategyKelly(factory, odds);
+    stakeStrategy.doNotRecommandNotToBetMatches();
     final List<Stake> stakes = stakeStrategy.getStakeRecommendation(Odds.getMatches(odds), totalStake);
     for (Stake stake : stakes) {
       System.out.println(BesoFormatter.formatVerbose(stake));
