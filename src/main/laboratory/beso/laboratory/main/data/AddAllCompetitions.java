@@ -1,7 +1,7 @@
 package beso.laboratory.main.data;
 
 import beso.dao.BesoDao;
-import beso.model.Competition;
+import beso.pojo.Competition;
 
 public class AddAllCompetitions {
 

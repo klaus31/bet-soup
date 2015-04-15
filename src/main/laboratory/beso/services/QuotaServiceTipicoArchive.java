@@ -5,13 +5,13 @@ import java.util.Calendar;
 import java.util.List;
 
 import beso.base.BesoFormatter;
-import beso.model.Competition;
-import beso.model.Match;
-import beso.model.Odds;
+import beso.pojo.Competition;
+import beso.pojo.Match;
+import beso.pojo.Quota;
 
-public class OddsServiceTipicoArchive extends OddsServiceAbstract {
+public class QuotaServiceTipicoArchive extends QuotaServiceAbstract {
 
-  public OddsServiceTipicoArchive(final List<Match> matches) {
+  public QuotaServiceTipicoArchive(final List<Match> matches) {
     super(matches);
   }
 
@@ -25,7 +25,7 @@ public class OddsServiceTipicoArchive extends OddsServiceAbstract {
   }
 
   @Override
-  Odds getOdds(final Match match, final String content) {
+  Quota getQuota(final Match match, final String content) {
     final String teamMarker1 = getTipicoTeamRegex(match.getTeam1().getName());
     final String teamMarker2 = getTipicoTeamRegex(match.getTeam2().getName());
     try {
@@ -38,11 +38,11 @@ public class OddsServiceTipicoArchive extends OddsServiceAbstract {
         return null;
       }
       contentCut = contentCut.substring(finalCutAt).trim();
-      final String[] oddsString = contentCut.split(" ");
-      final double rateTeam1 = Double.parseDouble(oddsString[0].replace(',', '.'));
-      final double rateDraw = Double.parseDouble(oddsString[1].replace(',', '.'));
-      final double rateTeam2 = Double.parseDouble(oddsString[2].replace(',', '.'));
-      return new Odds(match, rateTeam1, rateDraw, rateTeam2);
+      final String[] quotaString = contentCut.split(" ");
+      final double rateTeam1 = Double.parseDouble(quotaString[0].replace(',', '.'));
+      final double rateDraw = Double.parseDouble(quotaString[1].replace(',', '.'));
+      final double rateTeam2 = Double.parseDouble(quotaString[2].replace(',', '.'));
+      return new Quota(match, rateTeam1, rateDraw, rateTeam2);
     } catch (Exception e) {
       System.err.println("Tipico service failed: " + BesoFormatter.format(match) + " (" + teamMarker1 + ":" + teamMarker2 + ")");
       return null;

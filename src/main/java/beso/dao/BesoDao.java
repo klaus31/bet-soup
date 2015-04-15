@@ -12,10 +12,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import beso.model.Competition;
-import beso.model.Match;
-import beso.model.Odds;
-import beso.model.Team;
+import beso.pojo.Competition;
+import beso.pojo.Match;
+import beso.pojo.Quota;
+import beso.pojo.Team;
 
 public class BesoDao implements AutoCloseable {
 
@@ -46,6 +46,10 @@ public class BesoDao implements AutoCloseable {
 
   public boolean exists(final Team team) {
     return team != null && team.getName() != null && findTeam("name", team.getName()) != null;
+  }
+
+  public <T> List<T> find(final Query query, final Class<T> entityClass) {
+    return mongoOperation.find(query, entityClass);
   }
 
   private Competition findCompetition(final String key, final String value) {
@@ -93,11 +97,11 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.find(query, Match.class);
   }
 
-  public List<Match> findMatchesFinishedAndWithoutOdds() {
+  public List<Match> findMatchesFinishedAndWithoutQuota() {
     final List<Match> matchesFinished = findMatchesFinished();
     final List<Match> matches = new ArrayList<>();
     for (Match match : matchesFinished) {
-      if (match.getOdds() == null) {
+      if (match.getQuota() == null) {
         matches.add(match);
       }
     }
@@ -115,19 +119,23 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.find(query, Match.class);
   }
 
-  public List<Odds> findOdds() {
-    return mongoOperation.findAll(Odds.class);
+  public List<Quota> findQuotas() {
+    return mongoOperation.findAll(Quota.class);
   }
 
-  public List<Odds> findOdds(final int limit) {
+  public List<Quota> findQuotas(final int limit) {
     final Query query = new Query();
     query.limit(limit);
-    return mongoOperation.find(query, Odds.class);
+    return mongoOperation.find(query, Quota.class);
   }
 
-  public Odds findOdds(final Match match) {
+  public Quota findQuota(final Match match) {
     final Query query = new Query(Criteria.where("match").is(match));
-    return mongoOperation.findOne(query, Odds.class);
+    return mongoOperation.findOne(query, Quota.class);
+  }
+
+  public <T> T findOne(final Query query, final Class<T> entityClass) {
+    return mongoOperation.findOne(query, entityClass);
   }
 
   public Team findTeam(final String id) {

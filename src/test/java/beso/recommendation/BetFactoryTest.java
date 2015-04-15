@@ -4,11 +4,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import beso.TestBeanFactory;
-import beso.model.Bet;
-import beso.model.Match;
-import beso.model.Odds;
-import static beso.model.Bet.TEAM_1_WIN;
-import static beso.model.Bet.TEAM_2_WIN;
+import beso.pojo.Match;
+import beso.pojo.Quota;
+import beso.pojo.WagerOn;
+import static beso.pojo.WagerOn.TEAM_1_WIN;
+import static beso.pojo.WagerOn.TEAM_2_WIN;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,12 +22,12 @@ public class BetFactoryTest {
   }
 
   @Test
-  public void getBetWhenOddsBetween() {
-    BetFactory factory = new BetFactoryRateBetween(1D, 1.5D);
-    assertEquals(TEAM_1_WIN, factory.getBet(new Odds(match, 1, 2, 3)));
-    assertEquals(TEAM_2_WIN, factory.getBet(new Odds(match, 1.51, 2, 1.3)));
-    assertEquals(Bet.DRAW, factory.getBet(new Odds(match, 1.51, 1.5, 2.3)));
-    assertEquals(null, factory.getBet(new Odds(match, 2, 2, 2.3)));
-    assertEquals(Bet.AMBIGUOUS, factory.getBet(new Odds(match, 1.2, 1.4, 2.3)));
+  public void getWagerOnWhenQuotaBetween() {
+    WagerOnFactory factory = new WagerOnFactoryRateBetween(1D, 1.5D);
+    assertEquals(TEAM_1_WIN, factory.getWagerOn(new Quota(match, 1, 2, 3)));
+    assertEquals(TEAM_2_WIN, factory.getWagerOn(new Quota(match, 1.51, 2, 1.3)));
+    assertEquals(WagerOn.DRAW, factory.getWagerOn(new Quota(match, 1.51, 1.5, 2.3)));
+    assertEquals(null, factory.getWagerOn(new Quota(match, 2, 2, 2.3)));
+    assertEquals(WagerOn.UNSURE, factory.getWagerOn(new Quota(match, 1.2, 1.4, 2.3)));
   }
 }

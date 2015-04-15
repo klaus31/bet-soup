@@ -6,13 +6,14 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
-import beso.evaluation.Outcome;
-import beso.model.Competition;
-import beso.model.Match;
-import beso.model.Odds;
-import beso.model.Team;
-import beso.stake.Profit;
-import beso.stake.Stake;
+import beso.pojo.BetResult;
+import beso.pojo.Competition;
+import beso.pojo.Match;
+import beso.pojo.Profit;
+import beso.pojo.Quota;
+import beso.pojo.Team;
+import beso.pojo.Wager;
+import beso.pojo.WagerOn;
 
 public class BesoFormatter {
 
@@ -35,6 +36,11 @@ public class BesoFormatter {
 
   public static String appendToLength(final String subject, final int length) {
     return appendToLength(' ', subject, length);
+  }
+
+  public static String format(final WagerOn bet) {
+    final String result = bet == null ? "NOT" : bet.toString();
+    return prependToLength(result, WagerOn.TEAM_1_WIN.toString().length() + 1);
   }
 
   public static String format(final Competition competition) {
@@ -61,23 +67,17 @@ public class BesoFormatter {
     return dateAndName + "  " + matchResult;
   }
 
-  public static String format(final Odds odds) {
-    final String rateTeam1 = format(odds.getRateTeam1(), "0.00");
-    final String rateTeam2 = format(odds.getRateTeam2(), "0.00");
-    final String rateDraw = format(odds.getRateDraw(), "0.00");
+  public static String format(final Quota quota) {
+    final String rateTeam1 = prependToLength(format(quota.getRateTeam1(), "0.00"), 5);
+    final String rateTeam2 = prependToLength(format(quota.getRateTeam2(), "0.00"), 5);
+    final String rateDraw = prependToLength(format(quota.getRateDraw(), "0.00"), 5);
     final String rates = String.format("%s|%s|%s", rateTeam1, rateDraw, rateTeam2);
-    return format(odds.getMatch()) + "  " + rates;
+    return format(quota.getMatch()) + "  " + rates;
   }
 
-  private static String format(final Outcome outcome) {
-    switch (outcome) {
-    case WIN:
-      return "WIN  ";
-    case LOOSE:
-      return "FAIL ";
-    default:
-      return "???  ";
-    }
+  private static String format(final BetResult betResult) {
+    final String result = betResult == null ? "???" : betResult.toString();
+    return prependToLength(result, BetResult.UNKNOWN.toString().length() + 1);
   }
 
   public static Object format(final Profit profit) {
@@ -103,12 +103,12 @@ public class BesoFormatter {
     return df.format(number);
   }
 
-  public static String formatVerbose(final Stake stake) {
-    final Odds odds = stake.getOdds();
-    final Double profitChance = stake.getProfitChance();
-    final Double value = stake.getValue();
-    final Outcome outcome = stake.getOutcome();
-    return format(odds) + "  " + prependToLength(formatEuro(value), 9) + "  " + prependToLength(formatEuro(profitChance), 9) + " " + format(outcome);
+  public static String formatVerbose(final Wager wager) {
+    final Quota quota = wager.getQuota();
+    final Profit profitChance = wager.getActualProfit();
+    final Double value = wager.getValue();
+    final BetResult betResult = wager.getBetResult();
+    return format(quota) + "  " + format(wager.getWagerOn()) + "  " + prependToLength(formatEuro(value), 7) + "  " + prependToLength(formatEuro(profitChance.getValue()), 7) + " " + format(betResult);
   }
 
   private static String prependToLength(final char character, final String subject, final int length) {

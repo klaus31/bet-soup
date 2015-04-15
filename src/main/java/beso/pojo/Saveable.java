@@ -1,4 +1,4 @@
-package beso.model;
+package beso.pojo;
 
 interface Saveable {
 

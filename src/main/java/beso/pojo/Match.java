@@ -1,4 +1,4 @@
-package beso.model;
+package beso.pojo;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -48,8 +48,8 @@ public class Match implements Saveable {
     return id;
   }
 
-  public Odds getOdds() {
-    return BesoDao.me().findOdds(this);
+  public Quota getQuota() {
+    return BesoDao.me().findQuota(this);
   }
 
   public Date getStart() {

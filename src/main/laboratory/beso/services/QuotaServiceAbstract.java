@@ -10,29 +10,29 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 
 import beso.laboratory.tools.UrlReader;
-import beso.model.Match;
-import beso.model.Odds;
+import beso.pojo.Match;
+import beso.pojo.Quota;
 
-abstract class OddsServiceAbstract implements OddsService {
+abstract class QuotaServiceAbstract implements QuotaService {
 
-  private final List<Match> matchesWithoutOddsFound = new ArrayList<>();
-  private final List<Odds> oddsFound = new ArrayList<>();
+  private final List<Match> matchesWithoutQuotaFound = new ArrayList<>();
+  private final List<Quota> quotasFound = new ArrayList<>();
 
-  public OddsServiceAbstract(final List<Match> matches) {
+  public QuotaServiceAbstract(final List<Match> matches) {
     final Map<String, String> urlContents = new HashMap<>();
     for (Match match : matches) {
       final String url = getUrl(match);
-      Odds odds = null;
+      Quota quota = null;
       if (url != null) {
         if (!urlContents.containsKey(url)) {
           urlContents.put(url, getContent(url));
         }
-        odds = getOdds(match, urlContents.get(url));
+        quota = getQuota(match, urlContents.get(url));
       }
-      if (odds == null) {
-        matchesWithoutOddsFound.add(match);
+      if (quota == null) {
+        matchesWithoutQuotaFound.add(match);
       } else {
-        oddsFound.add(odds);
+        quotasFound.add(quota);
       }
     }
   }
@@ -44,15 +44,15 @@ abstract class OddsServiceAbstract implements OddsService {
   }
 
   @Override
-  public List<Match> getMatchesWithoutOddsFound() {
-    return matchesWithoutOddsFound;
+  public List<Match> getMatchesWithoutQuotaFound() {
+    return matchesWithoutQuotaFound;
   }
 
-  abstract Odds getOdds(Match match, String content);
+  abstract Quota getQuota(Match match, String content);
 
   @Override
-  public List<Odds> getOddsFound() {
-    return oddsFound;
+  public List<Quota> getQuotasFound() {
+    return quotasFound;
   }
 
   abstract String getUrl(Match match);

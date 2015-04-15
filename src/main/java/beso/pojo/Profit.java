@@ -1,4 +1,4 @@
-package beso.stake;
+package beso.pojo;
 
 public class Profit {
 
@@ -22,5 +22,9 @@ public class Profit {
 
   public void plus(final double value) {
     this.value += value;
+  }
+
+  public void add(Profit profit) {
+    plus(profit.getValue());
   }
 }

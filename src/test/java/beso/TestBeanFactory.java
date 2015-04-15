@@ -6,10 +6,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import beso.dao.SpringMongoTestConfig;
-import beso.model.Competition;
-import beso.model.Match;
-import beso.model.Odds;
-import beso.model.Team;
+import beso.pojo.Competition;
+import beso.pojo.Match;
+import beso.pojo.Quota;
+import beso.pojo.Team;
 
 public class TestBeanFactory {
 
@@ -28,13 +28,13 @@ public class TestBeanFactory {
     return new Match(competition, getTeam(nameTeam1), getTeam(nameTeam2), calendar.getTime());
   }
 
-  public static Odds getOdds(final double rateTeam1, final double rateDraw, final double rateTeam2) {
+  public static Quota getQuota(final double rateTeam1, final double rateDraw, final double rateTeam2) {
     Match match = getMatch();
-    return new Odds(match, rateTeam1, rateDraw, rateTeam2);
+    return new Quota(match, rateTeam1, rateDraw, rateTeam2);
   }
 
-  public static Odds getOddsWithFinishedMatch(final int goalsTeam1, final int goalsTeam2, final double rateTeam1, final double rateDraw, final double rateTeam2) {
-    Odds result = getOdds(rateTeam1, rateDraw, rateTeam2);
+  public static Quota getQuotaWithFinishedMatch(final int goalsTeam1, final int goalsTeam2, final double rateTeam1, final double rateDraw, final double rateTeam2) {
+    Quota result = getQuota(rateTeam1, rateDraw, rateTeam2);
     result.getMatch().setGoals(goalsTeam1, goalsTeam2);
     return result;
   }

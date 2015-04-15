@@ -7,8 +7,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import beso.TestBeanFactory;
-import beso.model.Match;
-import beso.model.Team;
+import beso.pojo.Match;
+import beso.pojo.Team;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

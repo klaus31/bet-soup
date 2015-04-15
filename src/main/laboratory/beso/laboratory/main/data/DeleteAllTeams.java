@@ -3,7 +3,7 @@ package beso.laboratory.main.data;
 import java.util.List;
 
 import beso.dao.BesoDao;
-import beso.model.Team;
+import beso.pojo.Team;
 
 public class DeleteAllTeams {
 

@@ -10,15 +10,15 @@ import org.json.JSONObject;
 
 import beso.dao.BesoDao;
 import beso.laboratory.tools.UrlReader;
-import beso.model.Competition;
-import beso.model.Match;
-import beso.model.Team;
+import beso.pojo.Competition;
+import beso.pojo.Match;
+import beso.pojo.Team;
 
-public class OddsServiceOpenLigaDb {
+public class QuotaServiceOpenLigaDb {
 
   private final Competition competition;
 
-  public OddsServiceOpenLigaDb(final Competition competition) {
+  public QuotaServiceOpenLigaDb(final Competition competition) {
     if (!BesoDao.me().exists(competition)) {
       competition.save();
     }

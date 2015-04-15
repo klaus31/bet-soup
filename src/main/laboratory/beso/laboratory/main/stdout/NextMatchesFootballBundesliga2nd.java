@@ -4,8 +4,8 @@ import java.util.List;
 
 import beso.base.BesoFormatter;
 import beso.dao.BesoDao;
-import beso.model.Competition;
-import beso.model.Match;
+import beso.pojo.Competition;
+import beso.pojo.Match;
 
 public class NextMatchesFootballBundesliga2nd {
 

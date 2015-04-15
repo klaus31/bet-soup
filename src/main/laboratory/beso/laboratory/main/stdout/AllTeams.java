@@ -3,7 +3,7 @@ package beso.laboratory.main.stdout;
 import java.util.List;
 
 import beso.dao.BesoDao;
-import beso.model.Team;
+import beso.pojo.Team;
 import static beso.base.BesoFormatter.format;
 
 public class AllTeams {

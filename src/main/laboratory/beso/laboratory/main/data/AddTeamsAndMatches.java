@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import beso.dao.BesoDao;
-import beso.model.Competition;
-import beso.model.Match;
-import beso.services.OddsServiceOpenLigaDb;
+import beso.pojo.Competition;
+import beso.pojo.Match;
+import beso.services.QuotaServiceOpenLigaDb;
 import static beso.base.BesoFormatter.format;
 
 public class AddTeamsAndMatches {
@@ -20,7 +20,7 @@ public class AddTeamsAndMatches {
   private void start() {
     final List<Competition> competitions = BesoDao.me().findCompetitions();
     for (Competition competition : competitions) {
-      final OddsServiceOpenLigaDb openLigaDb = new OddsServiceOpenLigaDb(competition);
+      final QuotaServiceOpenLigaDb openLigaDb = new QuotaServiceOpenLigaDb(competition);
       final int currentYear = Calendar.getInstance().get(Calendar.YEAR);
       int indexYear = currentYear - 5;
       final List<Match> matches = openLigaDb.getMatchData(indexYear);
