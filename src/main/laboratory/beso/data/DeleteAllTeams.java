@@ -1,18 +1,15 @@
-package beso.laboratory.main.data;
+package beso.data;
 
 import java.util.List;
 
 import beso.dao.BesoDao;
+import beso.main.Launchable;
 import beso.pojo.Team;
 
-public class DeleteAllTeams {
+public class DeleteAllTeams implements Launchable {
 
-  public static void main(final String[] args) {
-    final DeleteAllTeams me = new DeleteAllTeams();
-    me.deleteTeams();
-  }
-
-  private void deleteTeams() {
+  @Override
+  public void launch(final String... args) {
     System.err.println("Please kill this line of code to avoid accidents");
     System.exit(0);
     final List<Team> teams = BesoDao.me().findTeams();

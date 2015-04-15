@@ -1,22 +1,19 @@
-package beso.laboratory.main.stdout;
+package beso.recommendation;
 
 import java.util.List;
 
 import beso.dao.BesoDao;
+import beso.main.Launchable;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.pojo.Team;
 import static beso.base.BesoFormatter.appendToLength;
 
-public class DataNumbers {
+public class DataNumbers implements Launchable {
 
-  public static void main(final String... args) {
-    final DataNumbers main = new DataNumbers();
-    main.start();
-  }
-
-  private void start() {
+  @Override
+  public void launch(final String... args) {
     // count things (without using mongos count)
     final List<Competition> competitions = BesoDao.me().findCompetitions();
     final int LENGTH = 6;

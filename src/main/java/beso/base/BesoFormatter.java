@@ -7,6 +7,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 import beso.pojo.BetResult;
+import beso.pojo.Budget;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.pojo.Profit;
@@ -38,9 +39,13 @@ public class BesoFormatter {
     return appendToLength(' ', subject, length);
   }
 
-  public static String format(final WagerOn bet) {
-    final String result = bet == null ? "NOT" : bet.toString();
-    return prependToLength(result, WagerOn.TEAM_1_WIN.toString().length() + 1);
+  private static String format(final BetResult betResult) {
+    final String result = betResult == null ? "???" : betResult.toString();
+    return prependToLength(result, BetResult.UNKNOWN.toString().length() + 1);
+  }
+
+  public static String format(final Budget budget) {
+    return formatEuro(budget.getValue());
   }
 
   public static String format(final Competition competition) {
@@ -67,21 +72,16 @@ public class BesoFormatter {
     return dateAndName + "  " + matchResult;
   }
 
+  public static Object format(final Profit profit) {
+    return formatEuro(profit.getValue());
+  }
+
   public static String format(final Quota quota) {
     final String rateTeam1 = prependToLength(format(quota.getRateTeam1(), "0.00"), 5);
     final String rateTeam2 = prependToLength(format(quota.getRateTeam2(), "0.00"), 5);
     final String rateDraw = prependToLength(format(quota.getRateDraw(), "0.00"), 5);
     final String rates = String.format("%s|%s|%s", rateTeam1, rateDraw, rateTeam2);
     return format(quota.getMatch()) + "  " + rates;
-  }
-
-  private static String format(final BetResult betResult) {
-    final String result = betResult == null ? "???" : betResult.toString();
-    return prependToLength(result, BetResult.UNKNOWN.toString().length() + 1);
-  }
-
-  public static Object format(final Profit profit) {
-    return formatEuro(profit.getValue());
   }
 
   public static String format(final Team team) {
@@ -94,7 +94,12 @@ public class BesoFormatter {
     return result1 + result2;
   }
 
-  private static String formatEuro(final double value) {
+  public static String format(final WagerOn bet) {
+    final String result = bet == null ? "NOT" : bet.toString();
+    return prependToLength(result, WagerOn.TEAM_1_WIN.toString().length() + 1);
+  }
+
+  public static String formatEuro(final double value) {
     return format(value, "0.00 €");
   }
 

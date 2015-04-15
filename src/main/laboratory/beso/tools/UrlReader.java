@@ -1,4 +1,4 @@
-package beso.laboratory.tools;
+package beso.tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class UrlReader {
       JSONArray json = new JSONArray(getStringFromUrl(url, charset));
       return json;
     } catch (JSONException e) {
-      Beso.exit(url + " is silly");
+      Beso.exitWithError(url + " is silly");
       return null;
     }
   }
@@ -40,7 +40,7 @@ public class UrlReader {
       JSONObject json = new JSONObject(getStringFromUrl(url, charset));
       return json;
     } catch (JSONException e) {
-      Beso.exit(url + " is silly");
+      Beso.exitWithError(url + " is silly");
       return null;
     }
   }
@@ -57,7 +57,7 @@ public class UrlReader {
       String jsonText = readAll(rd);
       return jsonText;
     } catch (IOException e) {
-      Beso.exit(url + " is silly");
+      Beso.exitWithError(url + " is silly");
       return null;
     } finally {
       try {

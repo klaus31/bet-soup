@@ -1,23 +1,20 @@
-package beso.laboratory.main.data;
+package beso.data;
 
 import java.util.List;
 
 import beso.base.BesoFormatter;
 import beso.dao.BesoDao;
+import beso.main.Launchable;
 import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.services.QuotaService;
 import beso.services.QuotaServiceTipicoArchive;
 
-public class AddQuotas {
-
-  public static void main(final String[] args) {
-    final AddQuotas step = new AddQuotas();
-    step.start();
-  }
+public class AddQuotas implements Launchable {
 
   // insert all matches of all known competitions of the last 5 years
-  private void start() {
+  @Override
+  public void launch(final String... args) {
     final List<Match> matches = BesoDao.me().findMatchesFinishedAndWithoutQuota();
     final QuotaService quotaService = new QuotaServiceTipicoArchive(matches);
     final List<Quota> quotas = quotaService.getQuotasFound();

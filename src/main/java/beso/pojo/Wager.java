@@ -10,7 +10,7 @@ public class Wager {
   final double value;
 
   public Wager(final double value, final WagerOn wagerOn, final Quota quota) {
-    Beso.exitIf(value < 0, "wager must be positive");
+    Beso.exitWithErrorIf(value < 0, "wager must be positive");
     this.value = value;
     this.wagerOn = wagerOn;
     this.quota = quota;
@@ -22,7 +22,7 @@ public class Wager {
     }
     if (getBetResult() == BetResult.WIN) {
       return getPossibleProfit();
-    } else if (getBetResult() == BetResult.LOOSE) {
+    } else if (getBetResult() == BetResult.LOSE) {
       return new Profit(value * -1);
     } else {
       return new Profit(0D);

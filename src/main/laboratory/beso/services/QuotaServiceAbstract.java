@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 
-import beso.laboratory.tools.UrlReader;
 import beso.pojo.Match;
 import beso.pojo.Quota;
+import beso.tools.UrlReader;
 
 abstract class QuotaServiceAbstract implements QuotaService {
 

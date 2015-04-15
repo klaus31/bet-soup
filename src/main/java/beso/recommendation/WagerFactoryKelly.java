@@ -5,7 +5,6 @@ import java.util.List;
 
 import beso.base.Beso;
 import beso.evaluation.WagerOnFactoryEvaluation;
-import beso.evaluation.WagerOnFactoryEvaluation;
 import beso.pojo.Budget;
 import beso.pojo.Match;
 import beso.pojo.Quota;
@@ -13,18 +12,22 @@ import beso.pojo.Wager;
 import beso.pojo.WagerOn;
 
 // http://de.wikipedia.org/wiki/Kelly-Formel
-public class WagerFactoryKelly implements WagerFactory {
+class WagerFactoryKelly implements WagerFactory {
 
   private final Double chance;
   private final WagerOnFactory factory;
-  private boolean recommandNotToBetMatches = true;
+  private boolean recommandNotToBetMatches = false;
+
+  public WagerFactoryKelly(final List<Quota> referenceQuotas) {
+    this(new WagerOnFactoryFavorite(), referenceQuotas);
+  }
 
   public WagerFactoryKelly(final WagerOnFactory factory, final List<Quota> referenceQuotas) {
     this.factory = factory;
     WagerOnFactoryEvaluation evaluation = new WagerOnFactoryEvaluation();
     // IDEA evaluate chance with reality
     chance = evaluation.rate(factory, referenceQuotas);
-    Beso.exitIf(chance == null, "could not compute the chance to win with given reference quota");
+    Beso.exitWithErrorIf(chance == null, "could not compute the chance to win with given reference quota");
   }
 
   public void doNotRecommandNotToBetMatches() {

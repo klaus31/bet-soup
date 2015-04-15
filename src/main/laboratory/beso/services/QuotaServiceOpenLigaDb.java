@@ -9,10 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import beso.dao.BesoDao;
-import beso.laboratory.tools.UrlReader;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.pojo.Team;
+import beso.tools.UrlReader;
 
 public class QuotaServiceOpenLigaDb {
 

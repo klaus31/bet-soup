@@ -3,7 +3,7 @@ package beso.recommendation;
 import beso.pojo.Quota;
 import beso.pojo.WagerOn;
 
-public class WagerOnFactoryRateBetween implements WagerOnFactory {
+class WagerOnFactoryRateBetween implements WagerOnFactory {
 
   private final double max;
   private final double min;
@@ -11,6 +11,14 @@ public class WagerOnFactoryRateBetween implements WagerOnFactory {
   public WagerOnFactoryRateBetween(final double min, final double max) {
     this.min = min;
     this.max = max;
+  }
+
+  double getMax() {
+    return max;
+  }
+
+  double getMin() {
+    return min;
   }
 
   @Override

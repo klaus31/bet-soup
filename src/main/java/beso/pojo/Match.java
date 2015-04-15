@@ -76,9 +76,9 @@ public class Match implements Saveable {
 
   @Override
   public void save() {
-    Beso.exitIf(team1.getId() == null, "store teams first");
-    Beso.exitIf(team2.getId() == null, "store teams first");
-    Beso.exitIf(competition.getId() == null, "store competition first");
+    Beso.exitWithErrorIf(team1.getId() == null, "store teams first");
+    Beso.exitWithErrorIf(team2.getId() == null, "store teams first");
+    Beso.exitWithErrorIf(competition.getId() == null, "store competition first");
     BesoDao.me().save(this);
   }
 
@@ -92,7 +92,7 @@ public class Match implements Saveable {
   }
 
   public boolean startsAtSameDayAs(final Match match) {
-    Beso.exitIf(match == null);
+    Beso.exitWithErrorIf(match == null);
     Calendar helperCalendar = Calendar.getInstance();
     helperCalendar.setTime(this.getStart());
     final String checkString = helperCalendar.get(Calendar.DAY_OF_YEAR) + helperCalendar.get(Calendar.YEAR) + "";

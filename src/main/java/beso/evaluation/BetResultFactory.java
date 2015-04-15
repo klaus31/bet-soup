@@ -5,7 +5,7 @@ import beso.pojo.Quota;
 import beso.pojo.Wager;
 import beso.pojo.WagerOn;
 import beso.recommendation.WagerOnFactory;
-import static beso.pojo.BetResult.LOOSE;
+import static beso.pojo.BetResult.LOSE;
 import static beso.pojo.BetResult.UNKNOWN;
 import static beso.pojo.BetResult.WIN;
 import static beso.pojo.WagerOn.DRAW;
@@ -15,9 +15,13 @@ import static beso.pojo.WagerOn.UNSURE;
 
 public class BetResultFactory {
 
+  public static BetResult get(final Wager wager) {
+    return get(wager.getWagerOn(), wager.getQuota());
+  }
+
   public static BetResult get(final WagerOn wagerOn, final Quota quota) {
     if (!quota.getMatch().isFinished()) {
-      return BetResult.UNKNOWN;
+      return UNKNOWN;
     }
     if (wagerOn == null || wagerOn == UNSURE) {
       return UNKNOWN;
@@ -29,15 +33,11 @@ public class BetResultFactory {
     } else if (wagerOn == DRAW && quota.getMatch().getGoalsTeam2() == quota.getMatch().getGoalsTeam1()) {
       return WIN;
     } else {
-      return LOOSE;
+      return LOSE;
     }
   }
 
   public static BetResult get(final WagerOnFactory factory, final Quota quota) {
     return get(factory.getWagerOn(quota), quota);
-  }
-
-  public static BetResult get(final Wager wager) {
-    return get(wager.getWagerOn(), wager.getQuota());
   }
 }

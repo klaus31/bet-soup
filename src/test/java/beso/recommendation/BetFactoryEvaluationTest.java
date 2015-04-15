@@ -1,4 +1,4 @@
-package beso.evaluation;
+package beso.recommendation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Test;
 
 import beso.TestBeanFactory;
+import beso.evaluation.WagerOnFactoryEvaluation;
 import beso.pojo.Quota;
 import beso.recommendation.WagerOnFactory;
 import beso.recommendation.WagerOnFactoryRateBetween;
