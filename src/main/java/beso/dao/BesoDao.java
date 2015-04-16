@@ -40,6 +40,22 @@ public class BesoDao implements AutoCloseable {
     ((ConfigurableApplicationContext) defaultCtx).close();
   }
 
+  public long countAll(final Class<?> entityClass) {
+    return mongoOperation.count(new Query(), entityClass);
+  }
+
+  public long countMatchesFinished() {
+    return mongoOperation.count(queryMatchesFinished(), Match.class);
+  }
+
+  public long countMatchesFinishedAndWithoutQuota() {
+    return findMatchesFinishedAndWithoutQuota().size();
+  }
+
+  public long countMatchesWithoutResult() {
+    return mongoOperation.count(queryMatchesWithoutResult(), Match.class);
+  }
+
   public boolean exists(final Competition competition) {
     return competition != null && competition.getName() != null && findCompetition("name", competition.getName()) != null;
   }
@@ -93,8 +109,7 @@ public class BesoDao implements AutoCloseable {
   }
 
   public List<Match> findMatchesFinished() {
-    final Query query = new Query(Criteria.where("goalsTeam1").ne(null));
-    return mongoOperation.find(query, Match.class);
+    return mongoOperation.find(queryMatchesFinished(), Match.class);
   }
 
   public List<Match> findMatchesFinishedAndWithoutQuota() {
@@ -109,14 +124,28 @@ public class BesoDao implements AutoCloseable {
   }
 
   public List<Match> findMatchesWithoutResult() {
-    final Query query = new Query(Criteria.where("goalsTeam1").is(null));
-    return mongoOperation.find(query, Match.class);
+    return mongoOperation.find(queryMatchesWithoutResult(), Match.class);
   }
 
   public List<Match> findMatchesWithoutResult(final Competition competition) {
     final Query query = new Query(Criteria.where("competition").is(competition));
     query.addCriteria(Criteria.where("goalsTeam1").is(null));
     return mongoOperation.find(query, Match.class);
+  }
+
+  public List<Match> findMatchesWithoutResult(final Competition competition, final int limit) {
+    final Query query = new Query(Criteria.where("competition").is(competition));
+    query.addCriteria(Criteria.where("goalsTeam1").is(null));
+    return mongoOperation.find(query.limit(limit), Match.class);
+  }
+
+  public <T> T findOne(final Query query, final Class<T> entityClass) {
+    return mongoOperation.findOne(query, entityClass);
+  }
+
+  public Quota findQuota(final Match match) {
+    final Query query = new Query(Criteria.where("match").is(match));
+    return mongoOperation.findOne(query, Quota.class);
   }
 
   public List<Quota> findQuotas() {
@@ -127,15 +156,6 @@ public class BesoDao implements AutoCloseable {
     final Query query = new Query();
     query.limit(limit);
     return mongoOperation.find(query, Quota.class);
-  }
-
-  public Quota findQuota(final Match match) {
-    final Query query = new Query(Criteria.where("match").is(match));
-    return mongoOperation.findOne(query, Quota.class);
-  }
-
-  public <T> T findOne(final Query query, final Class<T> entityClass) {
-    return mongoOperation.findOne(query, entityClass);
   }
 
   public Team findTeam(final String id) {
@@ -155,6 +175,14 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.findAll(Team.class);
   }
 
+  private Query queryMatchesFinished() {
+    return new Query(Criteria.where("goalsTeam1").ne(null));
+  }
+
+  private Query queryMatchesWithoutResult() {
+    return new Query(Criteria.where("goalsTeam1").is(null));
+  }
+
   public void remove(final Team team) {
     final Query query = new Query(Criteria.where("id").is(team.getId()));
     mongoOperation.remove(query, Team.class);
@@ -169,7 +197,7 @@ public class BesoDao implements AutoCloseable {
   }
 
   public void update(final Team team, final String key, final Object newValue) {
-    final Query query = new Query(Criteria.where("id").is(team.getId()));
+    final Query query = new Query(Criteria.where("_id").is(team.getId()));
     mongoOperation.updateFirst(query, Update.update(key, newValue), Team.class);
   }
 }

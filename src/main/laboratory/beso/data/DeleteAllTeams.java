@@ -2,10 +2,13 @@ package beso.data;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import beso.dao.BesoDao;
 import beso.main.Launchable;
 import beso.pojo.Team;
 
+@Component
 public class DeleteAllTeams implements Launchable {
 
   @Override

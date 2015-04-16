@@ -4,8 +4,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
-
 import beso.pojo.BetResult;
 import beso.pojo.Budget;
 import beso.pojo.Competition;
@@ -18,30 +16,8 @@ import beso.pojo.WagerOn;
 
 public class BesoFormatter {
 
-  private static final int MIN_CHARCOUNT_TEAM_NAME = 25;
-
-  private static String appendToLength(final char character, final String subject, final int length) {
-    if (subject.length() < length) {
-      return subject + StringUtils.repeat(character, length - subject.length());
-    }
-    return subject;
-  }
-
-  public static String appendToLength(final double subject, final int length) {
-    return appendToLength(subject + "", length);
-  }
-
-  public static String appendToLength(final int subject, final int length) {
-    return appendToLength(subject + "", length);
-  }
-
-  public static String appendToLength(final String subject, final int length) {
-    return appendToLength(' ', subject, length);
-  }
-
-  private static String format(final BetResult betResult) {
-    final String result = betResult == null ? "???" : betResult.toString();
-    return prependToLength(result, BetResult.UNKNOWN.toString().length() + 1);
+  public static String format(final BetResult betResult) {
+    return betResult == null ? "???" : betResult.toString();
   }
 
   public static String format(final Budget budget) {
@@ -52,7 +28,7 @@ public class BesoFormatter {
     return competition.getName();
   }
 
-  private static String format(final Date date) {
+  public static String format(final Date date) {
     return new SimpleDateFormat("dd.MM.yy HH:mm").format(date);
   }
 
@@ -65,6 +41,7 @@ public class BesoFormatter {
     return df.format(number);
   }
 
+  @Deprecated
   public static String format(final Match match) {
     final String dateAndName = format(match.getStart(), match.getTeam1(), match.getTeam2());
     final String format = "%s:%s";
@@ -77,9 +54,9 @@ public class BesoFormatter {
   }
 
   public static String format(final Quota quota) {
-    final String rateTeam1 = prependToLength(format(quota.getRateTeam1(), "0.00"), 5);
-    final String rateTeam2 = prependToLength(format(quota.getRateTeam2(), "0.00"), 5);
-    final String rateDraw = prependToLength(format(quota.getRateDraw(), "0.00"), 5);
+    final String rateTeam1 = format(quota.getRateTeam1(), "0.00");
+    final String rateTeam2 = format(quota.getRateTeam2(), "0.00");
+    final String rateDraw = format(quota.getRateDraw(), "0.00");
     final String rates = String.format("%s|%s|%s", rateTeam1, rateDraw, rateTeam2);
     return format(quota.getMatch()) + "  " + rates;
   }
@@ -88,15 +65,13 @@ public class BesoFormatter {
     return team.getName();
   }
 
+  @Deprecated
   private static String format(final Team team1, final Team team2) {
-    String result1 = appendToLength('.', team1.getName() + " ", MIN_CHARCOUNT_TEAM_NAME);
-    String result2 = prependToLength('.', " " + team2.getName(), MIN_CHARCOUNT_TEAM_NAME);
-    return result1 + result2;
+    return team1.getName() + ":" + team2.getName();
   }
 
   public static String format(final WagerOn bet) {
-    final String result = bet == null ? "NOT" : bet.toString();
-    return prependToLength(result, WagerOn.TEAM_1_WIN.toString().length() + 1);
+    return bet == null ? "NOT" : bet.toString();
   }
 
   public static String formatEuro(final double value) {
@@ -108,22 +83,12 @@ public class BesoFormatter {
     return df.format(number);
   }
 
+  @Deprecated
   public static String formatVerbose(final Wager wager) {
     final Quota quota = wager.getQuota();
     final Profit profitChance = wager.getActualProfit();
     final Double value = wager.getValue();
     final BetResult betResult = wager.getBetResult();
-    return format(quota) + "  " + format(wager.getWagerOn()) + "  " + prependToLength(formatEuro(value), 7) + "  " + prependToLength(formatEuro(profitChance.getValue()), 7) + " " + format(betResult);
-  }
-
-  private static String prependToLength(final char character, final String subject, final int length) {
-    if (subject.length() < length) {
-      return StringUtils.repeat(character, length - subject.length()) + subject;
-    }
-    return subject;
-  }
-
-  private static String prependToLength(final String subject, final int length) {
-    return prependToLength(' ', subject, length);
+    return format(quota) + "  " + format(wager.getWagerOn()) + "  " + formatEuro(value) + "  " + formatEuro(profitChance.getValue()) + " " + format(betResult);
   }
 }

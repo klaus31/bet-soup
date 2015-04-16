@@ -1,34 +1,35 @@
 package beso.recommendation;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import beso.base.BesoTable;
 import beso.dao.BesoDao;
 import beso.main.Launchable;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.pojo.Team;
-import static beso.base.BesoFormatter.appendToLength;
 
+@Component
 public class DataNumbers implements Launchable {
+
+  @Autowired
+  private BesoTable table;
 
   @Override
   public void launch(final String... args) {
     // count things (without using mongos count)
-    final List<Competition> competitions = BesoDao.me().findCompetitions();
-    final int LENGTH = 6;
-    System.out.println(appendToLength(competitions.size(), LENGTH) + " competitions");
-    List<Quota> quotas = BesoDao.me().findQuotas();
-    System.out.println(appendToLength(quotas.size(), LENGTH) + " quotas");
-    List<Match> matches = BesoDao.me().findMatches();
-    System.out.println(appendToLength(matches.size(), LENGTH) + " matches");
-    matches = BesoDao.me().findMatchesFinished();
-    System.out.println(appendToLength(matches.size(), LENGTH) + " matches finished");
-    matches = BesoDao.me().findMatchesFinishedAndWithoutQuota();
-    System.out.println(appendToLength(matches.size(), LENGTH) + " matches finished but without quota");
-    matches = BesoDao.me().findMatchesWithoutResult();
-    System.out.println(appendToLength(matches.size(), LENGTH) + " matches without result");
-    List<Team> teams = BesoDao.me().findTeams();
-    System.out.println(appendToLength(teams.size(), LENGTH) + " teams");
+    table.addHeadline("DATA NUMBERS");
+    table.addHeadline("count of documents in your database");
+    table.addHeaderCols("data", "count");
+    table.add("competitions", BesoDao.me().countAll(Competition.class));
+    table.add("quotas", BesoDao.me().countAll(Quota.class));
+    table.add("matches", BesoDao.me().countAll(Match.class));
+    table.add("matches finished", BesoDao.me().countMatchesFinished());
+    table.add("matches finished but without quota", BesoDao.me().countMatchesFinishedAndWithoutQuota());
+    table.add("matches without result", BesoDao.me().countMatchesWithoutResult());
+    table.add("teams", BesoDao.me().countAll(Team.class));
+    table.print();
   }
 }

@@ -2,6 +2,8 @@ package beso.data;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import beso.base.BesoFormatter;
 import beso.dao.BesoDao;
 import beso.main.Launchable;
@@ -10,6 +12,7 @@ import beso.pojo.Quota;
 import beso.services.QuotaService;
 import beso.services.QuotaServiceTipicoArchive;
 
+@Component
 public class AddQuotas implements Launchable {
 
   // insert all matches of all known competitions of the last 5 years

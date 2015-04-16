@@ -2,10 +2,12 @@ package beso.recommendation;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import beso.base.Beso;
 import beso.base.BesoFormatter;
+import beso.base.BesoTable;
 import beso.dao.BesoDao;
 import beso.evaluation.WagerEvaluation;
 import beso.main.Launchable;
@@ -13,8 +15,14 @@ import beso.pojo.Budget;
 import beso.pojo.Profit;
 import beso.pojo.Quota;
 import beso.pojo.Wager;
+import static beso.base.BesoFormatter.format;
+import static beso.base.BesoFormatter.formatEuro;
 
+@Component
 public class EvaluationOfWagerFactoryKelly implements Launchable {
+
+  @Autowired
+  private BesoTable table;
 
   @Override
   public void launch(final String... args) {
@@ -24,16 +32,28 @@ public class EvaluationOfWagerFactoryKelly implements Launchable {
     final WagerFactoryFavorite wagerFactory = new WagerFactoryFavorite(quotas);
     final List<Wager> wagers = wagerFactory.getWagerRecommendation(Quota.getMatches(quotas), totalBudget);
     Beso.exitWithOkIf(wagers.isEmpty(), "no recommendations for wagers");
+    table.addHeadline("Evaluation of the favorite wager factory".toUpperCase());
+    table.addHeaderCols("quota team1", "quota draw", "quota team2", "wager on", "wager amount", "actual profit", "bet result");
     for (Wager wager : wagers) {
-      System.out.println(BesoFormatter.formatVerbose(wager));
+      table.add(wager.getQuota().getRateTeam1());
+      table.add(wager.getQuota().getRateDraw());
+      table.add(wager.getQuota().getRateTeam2());
+      table.add(format(wager.getWagerOn()));
+      table.add(formatEuro(wager.getValue()));
+      table.add(format(wager.getActualProfit()));
+      table.add(format(wager.getBetResult()));
     }
-    String line = StringUtils.repeat('–', BesoFormatter.formatVerbose(wagers.get(0)).length());
-    System.out.println(line);
+    table.print();
+    table.clear();
+    //    2nd table summary
     WagerEvaluation evaluation = new WagerEvaluation();
     Profit profit = evaluation.getActualProfit(wagers);
-    System.out.println("GAMES CHECKED:   " + countOfGames);
-    System.out.println("WAGERS MADE:     " + wagers.size());
-    System.out.println("BUDGET:          " + BesoFormatter.format(totalBudget));
-    System.out.println("TOTAL PROFIT:    " + BesoFormatter.format(profit));
+    table.addHeadline("summary".toUpperCase());
+    table.setNoHeaderColumns(2);
+    table.add("games checked", countOfGames);
+    table.add("wagers made", wagers.size());
+    table.add("budget", BesoFormatter.format(totalBudget));
+    table.add("total profit", BesoFormatter.format(profit));
+    table.print();
   }
 }

@@ -3,6 +3,8 @@ package beso.data;
 import java.util.Calendar;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import beso.dao.BesoDao;
 import beso.main.Launchable;
 import beso.pojo.Competition;
@@ -10,6 +12,7 @@ import beso.pojo.Match;
 import beso.services.QuotaServiceOpenLigaDb;
 import static beso.base.BesoFormatter.format;
 
+@Component
 public class AddTeamsAndMatches implements Launchable {
 
   // insert all matches of all known competitions of the last 5 years
