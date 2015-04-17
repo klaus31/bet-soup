@@ -1,5 +1,9 @@
 package beso.base;
 
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+
 public class Beso {
 
   public static final void exitWithError(final String message) {
@@ -23,5 +27,25 @@ public class Beso {
       System.out.println(message);
       System.exit(0);
     }
+  }
+
+  public static Options getOptions() {
+    final Options options = new Options();
+    OptionBuilder.withDescription("Show this help");
+    OptionBuilder.withLongOpt("help");
+    options.addOption(OptionBuilder.create("h"));
+    OptionBuilder.withDescription("The main class to launch. For a list with all possible targets use -t possibleTargets.");
+    OptionBuilder.withLongOpt("target");
+    OptionBuilder.withArgName("target");
+    OptionBuilder.hasArg();
+    options.addOption(OptionBuilder.create("t"));
+    options.addOption(OptionBuilder.create("t"));
+    return options;
+  }
+
+  public static void printUsage(final int status) {
+    HelpFormatter formatter = new HelpFormatter();
+    formatter.printHelp("java -jar bet-soup-<version>.jar", getOptions());
+    System.exit(status);
   }
 }

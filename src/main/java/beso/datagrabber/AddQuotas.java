@@ -1,4 +1,4 @@
-package beso.data;
+package beso.datagrabber;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import beso.base.BesoTable;
 import beso.dao.BesoDao;
 import beso.main.Launchable;
 import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.services.QuotaService;
 import beso.services.QuotaServiceTipicoArchive;
+import beso.tools.BesoTable;
 
 @Component
 public class AddQuotas implements Launchable {
@@ -24,7 +24,7 @@ public class AddQuotas implements Launchable {
 
   // insert all matches of all known competitions of the last 5 years
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     final List<Match> matches = BesoDao.me().findMatchesFinishedAndWithoutQuota();
     final QuotaService quotaService = new QuotaServiceTipicoArchive(matches);
     final List<Quota> quotas = quotaService.getQuotasFound();

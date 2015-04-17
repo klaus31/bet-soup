@@ -1,4 +1,4 @@
-package beso.data;
+package beso.datagrabber;
 
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import beso.pojo.Competition;
 public class AddAllCompetitions implements Launchable {
 
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     Competition competition = new Competition(Competition.FOOTBALL_BUNDESLIGA_1);
     if (!BesoDao.me().exists(competition)) {
       competition.save();

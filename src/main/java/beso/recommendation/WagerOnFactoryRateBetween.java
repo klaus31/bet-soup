@@ -3,7 +3,7 @@ package beso.recommendation;
 import beso.pojo.Quota;
 import beso.pojo.WagerOn;
 
-class WagerOnFactoryRateBetween implements WagerOnFactory {
+public class WagerOnFactoryRateBetween implements WagerOnFactory {
 
   private final double max;
   private final double min;

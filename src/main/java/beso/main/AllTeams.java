@@ -1,14 +1,13 @@
-package beso.recommendation;
+package beso.main;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import beso.base.BesoTable;
 import beso.dao.BesoDao;
-import beso.main.Launchable;
 import beso.pojo.Team;
+import beso.tools.BesoTable;
 
 @Component
 public class AllTeams implements Launchable {
@@ -17,7 +16,7 @@ public class AllTeams implements Launchable {
   private BesoTable table;
 
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     final List<Team> teams = BesoDao.me().findTeams();
     table.addHeaderCols("id", "name");
     for (Team team : teams) {

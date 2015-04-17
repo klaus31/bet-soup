@@ -1,4 +1,4 @@
-package beso.recommendation;
+package beso.main;
 
 import java.util.List;
 
@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import beso.base.BesoTable;
 import beso.dao.BesoDao;
-import beso.main.Launchable;
 import beso.pojo.Competition;
 import beso.pojo.Match;
+import beso.tools.BesoTable;
 
 @Primary
 @Component
@@ -20,7 +19,7 @@ public class NextMatchesFootball implements Launchable {
   private BesoTable table;
 
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     print("next matches 1. Bundesliga", BesoDao.me().findFootballBundesliga1st());
     print("next matches 2. Bundesliga", BesoDao.me().findFootballBundesliga2nd());
   }

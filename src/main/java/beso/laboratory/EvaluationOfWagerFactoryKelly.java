@@ -1,4 +1,4 @@
-package beso.recommendation;
+package beso.laboratory;
 
 import java.util.List;
 
@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import beso.base.Beso;
-import beso.base.BesoFormatter;
-import beso.base.BesoTable;
 import beso.dao.BesoDao;
 import beso.evaluation.WagerEvaluation;
 import beso.main.Launchable;
@@ -15,8 +13,11 @@ import beso.pojo.Budget;
 import beso.pojo.Profit;
 import beso.pojo.Quota;
 import beso.pojo.Wager;
-import static beso.base.BesoFormatter.format;
-import static beso.base.BesoFormatter.formatEuro;
+import beso.recommendation.WagerFactoryFavorite;
+import beso.tools.BesoFormatter;
+import beso.tools.BesoTable;
+import static beso.tools.BesoFormatter.format;
+import static beso.tools.BesoFormatter.formatEuro;
 
 @Component
 public class EvaluationOfWagerFactoryKelly implements Launchable {
@@ -25,7 +26,7 @@ public class EvaluationOfWagerFactoryKelly implements Launchable {
   private BesoTable table;
 
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     final int countOfGames = 1000;
     final List<Quota> quotas = BesoDao.me().findQuotas(countOfGames);
     final Budget totalBudget = new Budget(100);

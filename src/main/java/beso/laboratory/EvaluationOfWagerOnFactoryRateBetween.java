@@ -1,12 +1,10 @@
-package beso.recommendation;
+package beso.laboratory;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import beso.base.BesoFormatter;
-import beso.base.BesoTable;
 import beso.dao.BesoDao;
 import beso.evaluation.WagerEvaluation;
 import beso.evaluation.WagerOnEvaluationResult;
@@ -17,8 +15,12 @@ import beso.pojo.Match;
 import beso.pojo.Profit;
 import beso.pojo.Quota;
 import beso.pojo.Wager;
-import static beso.base.BesoFormatter.format;
-import static beso.base.BesoFormatter.formatEuro;
+import beso.recommendation.WagerFactoryFavorite;
+import beso.recommendation.WagerOnFactoryRateBetween;
+import beso.tools.BesoFormatter;
+import beso.tools.BesoTable;
+import static beso.tools.BesoFormatter.format;
+import static beso.tools.BesoFormatter.formatEuro;
 
 @Component
 public class EvaluationOfWagerOnFactoryRateBetween implements Launchable {
@@ -69,7 +71,7 @@ public class EvaluationOfWagerOnFactoryRateBetween implements Launchable {
   private BesoTable table;
 
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     final List<Quota> quotas = BesoDao.me().findQuotas();
     final List<Match> matches = Quota.getMatches(quotas);
     final WagerOnFactoryEvaluation bfe = new WagerOnFactoryEvaluation();

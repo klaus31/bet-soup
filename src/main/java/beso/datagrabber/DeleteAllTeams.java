@@ -1,4 +1,4 @@
-package beso.data;
+package beso.datagrabber;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import beso.pojo.Team;
 public class DeleteAllTeams implements Launchable {
 
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     System.err.println("Please kill this line of code to avoid accidents");
     System.exit(0);
     final List<Team> teams = BesoDao.me().findTeams();

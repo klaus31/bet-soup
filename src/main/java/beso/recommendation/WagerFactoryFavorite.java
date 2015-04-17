@@ -15,7 +15,7 @@ public class WagerFactoryFavorite implements WagerFactory {
     this(new WagerOnFactoryFavorite(), referenceQuotas);
   }
 
-  WagerFactoryFavorite(final WagerOnFactory factory, final List<Quota> referenceQuotas) {
+  public WagerFactoryFavorite(final WagerOnFactory factory, final List<Quota> referenceQuotas) {
     this.factory = new WagerFactoryKelly(factory, referenceQuotas);
   }
 

@@ -1,15 +1,14 @@
-package beso.recommendation;
+package beso.main;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import beso.base.BesoTable;
 import beso.dao.BesoDao;
-import beso.main.Launchable;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.pojo.Team;
+import beso.tools.BesoTable;
 
 @Component
 public class DataNumbers implements Launchable {
@@ -18,7 +17,7 @@ public class DataNumbers implements Launchable {
   private BesoTable table;
 
   @Override
-  public void launch(final String... args) {
+  public void launch() {
     // count things (without using mongos count)
     table.addHeadline("DATA NUMBERS");
     table.addHeadline("count of documents in your database");

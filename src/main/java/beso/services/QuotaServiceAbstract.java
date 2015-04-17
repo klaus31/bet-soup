@@ -37,6 +37,11 @@ abstract class QuotaServiceAbstract implements QuotaService {
     }
   }
 
+  protected int endOf(final String regex, final String subject) {
+    final Matcher matcher = Pattern.compile(regex).matcher(subject);
+    return matcher.find() ? matcher.end() : -1;
+  }
+
   private String getContent(final String url) {
     final String htmlContent = UrlReader.getStringFromUrl(url);
     final String result = Jsoup.parse(htmlContent.replaceAll("(?i)<br[^>]*>", "br2n").replaceAll("(?i)<tr[^>]*>", "br2n")).text();
@@ -56,9 +61,4 @@ abstract class QuotaServiceAbstract implements QuotaService {
   }
 
   abstract String getUrl(Match match);
-
-  protected int endOf(final String regex, final String subject) {
-    final Matcher matcher = Pattern.compile(regex).matcher(subject);
-    return matcher.find() ? matcher.end() : -1;
-  }
 }

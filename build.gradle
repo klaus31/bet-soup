@@ -1,7 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-version = '0.0.1-SNAPSHOT'
+version = getDate()
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmm')
+    return formattedDate
+}
 
 jar {
   manifest { 
@@ -19,7 +25,7 @@ repositories {
 }
 
 dependencies {
-  compile 'org.apache.commons:commons-lang3:3.0'
+  compile 'org.apache.commons:commons-lang3:3.4'
   compile 'commons-io:commons-io:2.4'
   compile 'org.json:json:20141113'
   compile 'org.jsoup:jsoup:1.8.1'
@@ -27,6 +33,8 @@ dependencies {
   compile 'org.mongodb:mongodb-driver:3.0.0'
   compile 'org.springframework.data:spring-data-mongodb:1.7.0.RELEASE'
   compile 'ch.qos.logback:logback-classic:1.1.3'
+  compile 'commons-cli:commons-cli:1.2'
+  
 
   testCompile 'junit:junit:4.12'
 }
