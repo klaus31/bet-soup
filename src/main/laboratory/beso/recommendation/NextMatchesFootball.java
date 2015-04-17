@@ -11,7 +11,6 @@ import beso.dao.BesoDao;
 import beso.main.Launchable;
 import beso.pojo.Competition;
 import beso.pojo.Match;
-import static beso.base.BesoFormatter.format;
 
 @Primary
 @Component
@@ -30,9 +29,9 @@ public class NextMatchesFootball implements Launchable {
     table.clear();
     final List<Match> matches = BesoDao.me().findMatchesWithoutResult(competition, 9);
     table.addHeadline(headline.toUpperCase());
-    table.addHeaderCols("kick-off", "team 1", "team 2");
+    table.addHeaderColsForMatch(false);
     for (Match match : matches) {
-      table.add(format(match.getStart()), match.getTeam1().getName(), match.getTeam2().getName());
+      table.addContentCols(match, false);
     }
     table.print();
   }

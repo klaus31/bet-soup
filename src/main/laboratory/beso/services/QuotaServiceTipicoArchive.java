@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import beso.base.BesoFormatter;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.pojo.Quota;
@@ -34,7 +33,7 @@ public class QuotaServiceTipicoArchive extends QuotaServiceAbstract {
       final String regex = teamMarker1 + ".+?" + match.getGoalsTeam1() + ":" + match.getGoalsTeam2() + ".+?" + teamMarker2 + ".+?[1-9]";
       final int finalCutAt = endOf(regex, contentCut) - 1;
       if (finalCutAt < 0) {
-        System.err.println("Tipico service failed: " + BesoFormatter.format(match) + " (" + teamMarker1 + ":" + teamMarker2 + ")");
+        System.err.println("Tipico service failed: " + match.getId() + " (" + teamMarker1 + ":" + teamMarker2 + ")");
         return null;
       }
       contentCut = contentCut.substring(finalCutAt).trim();
@@ -44,7 +43,7 @@ public class QuotaServiceTipicoArchive extends QuotaServiceAbstract {
       final double rateTeam2 = Double.parseDouble(quotaString[2].replace(',', '.'));
       return new Quota(match, rateTeam1, rateDraw, rateTeam2);
     } catch (Exception e) {
-      System.err.println("Tipico service failed: " + BesoFormatter.format(match) + " (" + teamMarker1 + ":" + teamMarker2 + ")");
+      System.err.println("Tipico service failed: " + match.getId() + " (" + teamMarker1 + ":" + teamMarker2 + ")");
       return null;
     }
   }

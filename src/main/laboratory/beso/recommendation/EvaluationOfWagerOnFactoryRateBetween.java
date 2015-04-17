@@ -9,6 +9,7 @@ import beso.base.BesoFormatter;
 import beso.base.BesoTable;
 import beso.dao.BesoDao;
 import beso.evaluation.WagerEvaluation;
+import beso.evaluation.WagerOnEvaluationResult;
 import beso.evaluation.WagerOnFactoryEvaluation;
 import beso.main.Launchable;
 import beso.pojo.Budget;
@@ -89,18 +90,18 @@ public class EvaluationOfWagerOnFactoryRateBetween implements Launchable {
       while (max < CHECK_MAX_MAX) {
         factoriesChecked++;
         final WagerOnFactoryRateBetween factory = new WagerOnFactoryRateBetween(min, max);
-        final Double rate = bfe.rate(factory, quotas);
-        if (rate == null) {
+        final WagerOnEvaluationResult wagerOnEvaluationResult = bfe.getEvaluationResult(factory, quotas);
+        if (wagerOnEvaluationResult.getCountWagersMade() == 0) {
           table.add(format(min, "0.0"), format(max, "0.0"), 0, 0, "-", "-", "-", "-");
         } else {
           final WagerFactoryFavorite wagerFactory = new WagerFactoryFavorite(factory, quotas);
           final List<Wager> wagers = wagerFactory.getWagerRecommendation(matches, totalBudget);
           final WagerEvaluation wagerEvaluation = new WagerEvaluation();
           final Profit profit = wagerEvaluation.getActualProfit(wagers);
-          final String percent = BesoFormatter.formatPercent(rate);
-          final int wonCount = (int) (rate * wagers.size());
           final ProfitPerWager currentProfitPerWager = new ProfitPerWager(profit, factoriesChecked, wagers, totalBudget);
-          table.add(factoriesChecked, format(min, "0.0"), format(max, "0.0"), wagers.size(), wonCount, percent, format(profit), formatEuro(currentProfitPerWager.getAmountPerWager()), formatEuro(currentProfitPerWager.getProfitPerWager()));
+          table.add(factoriesChecked, format(min, "0.0"), format(max, "0.0"));
+          table.add(wagers.size(), wagerOnEvaluationResult.getCountWon(), BesoFormatter.formatPercent(wagerOnEvaluationResult.getSuccessRate()));
+          table.add(format(profit), formatEuro(currentProfitPerWager.getAmountPerWager()), formatEuro(currentProfitPerWager.getProfitPerWager()));
           if (highestProfit == null || highestProfit.isWorseThan(profit)) {
             highestProfit = new ProfitTotal(profit, factoriesChecked);
           }

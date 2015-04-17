@@ -26,7 +26,7 @@ class WagerFactoryKelly implements WagerFactory {
     this.factory = factory;
     WagerOnFactoryEvaluation evaluation = new WagerOnFactoryEvaluation();
     // IDEA evaluate chance with reality
-    chance = evaluation.rate(factory, referenceQuotas);
+    chance = evaluation.getEvaluationResult(factory, referenceQuotas).getSuccessRate();
     Beso.exitWithErrorIf(chance == null, "could not compute the chance to win with given reference quota");
   }
 

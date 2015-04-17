@@ -10,7 +10,7 @@ import static beso.pojo.BetResult.WIN;
 
 public class WagerOnFactoryEvaluation {
 
-  public Double rate(final WagerOnFactory factory, final List<Quota> quotas) {
+  public WagerOnEvaluationResult getEvaluationResult(final WagerOnFactory factory, final List<Quota> quotas) {
     int win = 0;
     int lose = 0;
     for (Quota quota : quotas) {
@@ -21,10 +21,6 @@ public class WagerOnFactoryEvaluation {
         lose++;
       }
     }
-    final int countBets = win + lose;
-    if (countBets == 0) {
-      return null;
-    }
-    return 1D * win / countBets;
+    return new WagerOnEvaluationResult(win, lose);
   }
 }

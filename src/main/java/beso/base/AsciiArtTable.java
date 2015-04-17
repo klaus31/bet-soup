@@ -7,12 +7,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 
-@Primary
-@Component
-public class AsciiArtTable implements BesoTable {
+public class AsciiArtTable {
 
   private static String prependToLength(final Object subject, final int length) {
     final String subjectString = subject == null ? "" : subject.toString();
@@ -46,32 +42,26 @@ public class AsciiArtTable implements BesoTable {
     this.borderCharacters = borderCharacters;
   }
 
-  @Override
   public void add(final List<Object> contentCols) {
     this.contentCols.addAll(contentCols);
   }
 
-  @Override
   public void add(final Object... contentCols) {
     add(new ArrayList<>(Arrays.asList(contentCols)));
   }
 
-  @Override
   public void addHeaderCols(final List<Object> headerCols) {
     this.headerCols.addAll(headerCols);
   }
 
-  @Override
   public void addHeaderCols(final Object... headerCols) {
     addHeaderCols(new ArrayList<>(Arrays.asList(headerCols)));
   }
 
-  @Override
   public void addHeadline(final Object headline) {
     this.headlines.add(headline);
   }
 
-  @Override
   public void clear() {
     headerCols.clear();
     contentCols.clear();
@@ -97,7 +87,6 @@ public class AsciiArtTable implements BesoTable {
     return result;
   }
 
-  @Override
   public String getOutput() {
     // prepare data
     while (contentCols.size() % headerCols.size() != 0) {
@@ -170,7 +159,6 @@ public class AsciiArtTable implements BesoTable {
     return false;
   }
 
-  @Override
   public void print() {
     defaultPrintStream.print(getOutput());
   }
@@ -217,7 +205,6 @@ public class AsciiArtTable implements BesoTable {
     this.borderCharacters = borderCharacters;
   }
 
-  @Override
   public void setNoHeaderColumns(int withColumns) {
     this.headerCols.clear();
     while (withColumns-- > 0) {
