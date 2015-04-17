@@ -5,13 +5,14 @@ import beso.evaluation.BetResultFactory;
 
 public class Wager {
 
-  final WagerOn wagerOn;
+  final Budget budget;
   final Quota quota;
-  final double value;
+  final WagerOn wagerOn;
 
-  public Wager(final double value, final WagerOn wagerOn, final Quota quota) {
-    Beso.exitWithErrorIf(value < 0, "wager must be positive");
-    this.value = value;
+  public Wager(final Budget budget, final WagerOn wagerOn, final Quota quota) {
+    Beso.exitWithErrorIf(budget == null, "wager must be positive");
+    Beso.exitWithErrorIf(budget.getValue() < 0, "wager must be positive");
+    this.budget = budget;
     this.wagerOn = wagerOn;
     this.quota = quota;
   }
@@ -23,18 +24,10 @@ public class Wager {
     if (getBetResult() == BetResult.WIN) {
       return getPossibleProfit();
     } else if (getBetResult() == BetResult.LOSE) {
-      return new Profit(value * -1);
+      return new Profit(budget.getValue() * -1);
     } else {
       return new Profit(0D);
     }
-  }
-
-  public WagerOn getWagerOn() {
-    return wagerOn;
-  }
-
-  public Quota getQuota() {
-    return quota;
   }
 
   public BetResult getBetResult() {
@@ -42,10 +35,18 @@ public class Wager {
   }
 
   public Profit getPossibleProfit() {
-    return new Profit((quota.getRate(wagerOn) * value) - value);
+    return new Profit((quota.getRate(wagerOn) * budget.getValue()) - budget.getValue());
+  }
+
+  public Quota getQuota() {
+    return quota;
   }
 
   public double getValue() {
-    return value;
+    return budget.getValue();
+  }
+
+  public WagerOn getWagerOn() {
+    return wagerOn;
   }
 }

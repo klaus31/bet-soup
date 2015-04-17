@@ -31,14 +31,13 @@ public class Beso {
 
   public static Options getOptions() {
     final Options options = new Options();
-    OptionBuilder.withDescription("Show this help");
     OptionBuilder.withLongOpt("help");
+    OptionBuilder.withDescription("Show this help");
     options.addOption(OptionBuilder.create("h"));
-    OptionBuilder.withDescription("The main class to launch. For a list with all possible targets use -t possibleTargets.");
     OptionBuilder.withLongOpt("target");
+    OptionBuilder.withDescription("The main class to launch. For a list with all possible targets use -t possibleTargets.");
     OptionBuilder.withArgName("target");
     OptionBuilder.hasArg();
-    options.addOption(OptionBuilder.create("t"));
     options.addOption(OptionBuilder.create("t"));
     return options;
   }

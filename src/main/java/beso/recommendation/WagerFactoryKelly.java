@@ -62,7 +62,7 @@ class WagerFactoryKelly implements WagerFactory {
     for (int index = 0; index < kellyFactors.size(); index++) {
       final Double kellyFactor = kellyFactors.get(index);
       final double wagerValue = kellyFactor * totalBudget.getValue() / kellyFactorsSum;
-      wagers.add(new Wager(wagerValue, bets.get(index), matchesWithRecommendation.get(index).getQuota()));
+      wagers.add(new Wager(new Budget(wagerValue), bets.get(index), matchesWithRecommendation.get(index).getQuota()));
     }
     return wagers;
   }

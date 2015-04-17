@@ -3,7 +3,6 @@ package beso.main;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import beso.dao.BesoDao;
@@ -11,7 +10,6 @@ import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.tools.BesoTable;
 
-@Primary
 @Component
 public class NextMatchesFootball implements Launchable {
 

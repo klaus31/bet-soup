@@ -3,6 +3,7 @@ package beso.laboratory;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import beso.dao.BesoDao;
@@ -15,37 +16,33 @@ import beso.pojo.Match;
 import beso.pojo.Profit;
 import beso.pojo.Quota;
 import beso.pojo.Wager;
-import beso.recommendation.WagerFactoryFavorite;
+import beso.recommendation.WagerFactory;
+import beso.recommendation.WagerFactoryFixedBudgetPerWager;
 import beso.recommendation.WagerOnFactoryRateBetween;
 import beso.tools.BesoFormatter;
 import beso.tools.BesoTable;
 import static beso.tools.BesoFormatter.format;
 import static beso.tools.BesoFormatter.formatEuro;
 
+@Primary
 @Component
-public class EvaluationOfWagerOnFactoryRateBetween implements Launchable {
+public class OptionsExplorerFactoryRateBetween implements Launchable {
 
-  private class ProfitPerWager extends ProfitTotal {
+  private class ProfitAvg extends ProfitTotal {
 
-    private final Budget totalBudget;
     private final List<Wager> wagers;
 
-    public ProfitPerWager(final Profit profit, final int factoryNumber, final List<Wager> wagers, final Budget totalBudget) {
+    public ProfitAvg(final Profit profit, final int factoryNumber, final List<Wager> wagers) {
       super(profit, factoryNumber);
       this.wagers = wagers;
-      this.totalBudget = totalBudget;
-    }
-
-    public double getAmountPerWager() {
-      return totalBudget.getValue() / wagers.size();
     }
 
     public double getProfitPerWager() {
       return profit.getValue() / wagers.size();
     }
 
-    public boolean isWorseThan(final ProfitPerWager profitPerWager) {
-      return this.getAmountPerWager() < profitPerWager.getAmountPerWager();
+    public boolean isWorseThan(final ProfitAvg profitPerWager) {
+      return this.getProfitPerWager() < profitPerWager.getProfitPerWager();
     }
   }
   private class ProfitTotal {
@@ -72,46 +69,47 @@ public class EvaluationOfWagerOnFactoryRateBetween implements Launchable {
 
   @Override
   public void launch() {
+    System.out.println("Please wait …");
     final List<Quota> quotas = BesoDao.me().findQuotas();
     final List<Match> matches = Quota.getMatches(quotas);
     final WagerOnFactoryEvaluation bfe = new WagerOnFactoryEvaluation();
-    final Budget totalBudget = new Budget(100);
-    double min = 1;
+    final Budget budgetPerWager = new Budget(1);
     final double CHECK_MIN_MAX = 1.5;
+    final double CHECK_MAX_MAX = 2;
+    double min = 1;
     double max = 1.1;
-    final double CHECK_MAX_MAX = 1.7;
-    ProfitTotal highestProfit = null;
-    ProfitPerWager highestProfitPerWager = null;
-    String output = "";
+    ProfitTotal bestProfitTotal = null;
+    ProfitAvg bestProfitAvg = null;
     int factoriesChecked = 0;
     // prepare table
-    table.addHeadline("evaluation of wager on factory".toUpperCase());
-    table.addHeadline("set " + format(totalBudget) + " in sum for recommanded wagers using the favorite wager factory");
-    table.addHeaderCols("#", "quota min", "max", "wagers made", "won", "won %", "profit total", "ø set", "ø won");
+    table.addHeadline("exploring options".toUpperCase());
+    table.addHeadline("set " + format(budgetPerWager) + " for each wager using 'quota between min and max' and compare actual made profits");
+    table.addHeaderCols("#", "quota min", "max", "wagers made", "won", "won %", "€ won total", "€ won ø");
+    final int factoriesToCheck = (int) (((CHECK_MIN_MAX - min) / .1) * ((CHECK_MAX_MAX - max) / .1));
     while (min < CHECK_MIN_MAX) {
       while (max < CHECK_MAX_MAX) {
+        System.out.println("… " + (factoriesToCheck - factoriesChecked) + " factories left");
         factoriesChecked++;
-        final WagerOnFactoryRateBetween factory = new WagerOnFactoryRateBetween(min, max);
-        final WagerOnEvaluationResult wagerOnEvaluationResult = bfe.getEvaluationResult(factory, quotas);
+        final WagerOnFactoryRateBetween wagerOnFactory = new WagerOnFactoryRateBetween(min, max);
+        final WagerOnEvaluationResult wagerOnEvaluationResult = bfe.getEvaluationResult(wagerOnFactory, quotas);
         if (wagerOnEvaluationResult.getCountWagersMade() == 0) {
           table.add(format(min, "0.0"), format(max, "0.0"), 0, 0, "-", "-", "-", "-");
         } else {
-          final WagerFactoryFavorite wagerFactory = new WagerFactoryFavorite(factory, quotas);
-          final List<Wager> wagers = wagerFactory.getWagerRecommendation(matches, totalBudget);
+          final WagerFactory wagerFactory = new WagerFactoryFixedBudgetPerWager(wagerOnFactory);
+          final List<Wager> wagers = wagerFactory.getWagerRecommendation(matches, budgetPerWager);
           final WagerEvaluation wagerEvaluation = new WagerEvaluation();
-          final Profit profit = wagerEvaluation.getActualProfit(wagers);
-          final ProfitPerWager currentProfitPerWager = new ProfitPerWager(profit, factoriesChecked, wagers, totalBudget);
+          final Profit currentProfit = wagerEvaluation.getActualProfit(wagers);
+          final ProfitAvg currentProfitPerWager = new ProfitAvg(currentProfit, factoriesChecked, wagers);
           table.add(factoriesChecked, format(min, "0.0"), format(max, "0.0"));
           table.add(wagers.size(), wagerOnEvaluationResult.getCountWon(), BesoFormatter.formatPercent(wagerOnEvaluationResult.getSuccessRate()));
-          table.add(format(profit), formatEuro(currentProfitPerWager.getAmountPerWager()), formatEuro(currentProfitPerWager.getProfitPerWager()));
-          if (highestProfit == null || highestProfit.isWorseThan(profit)) {
-            highestProfit = new ProfitTotal(profit, factoriesChecked);
+          table.add(format(currentProfit), formatEuro(currentProfitPerWager.getProfitPerWager()));
+          if (bestProfitTotal == null || bestProfitTotal.isWorseThan(currentProfit)) {
+            bestProfitTotal = new ProfitTotal(currentProfit, factoriesChecked);
           }
-          if (highestProfitPerWager == null || highestProfitPerWager.isWorseThan(currentProfitPerWager)) {
-            highestProfitPerWager = new ProfitPerWager(profit, factoriesChecked, wagers, totalBudget);
+          if (bestProfitAvg == null || bestProfitAvg.isWorseThan(currentProfitPerWager)) {
+            bestProfitAvg = new ProfitAvg(currentProfit, factoriesChecked, wagers);
           }
         }
-        System.out.println(output);
         max += .1;
       }
       min += .1;
@@ -124,9 +122,9 @@ public class EvaluationOfWagerOnFactoryRateBetween implements Launchable {
     table.setNoHeaderColumns(2);
     table.add("FACTORIES CHECKED", factoriesChecked);
     table.add("QUOTAS CHECKED", quotas.size());
-    table.add("BUDGET", BesoFormatter.format(totalBudget));
-    table.add("BEST FACTORY TOTAL", "#" + highestProfit.getFactoryNumber());
-    table.add("BEST FACTORY PRO WAGER", "#" + highestProfit.getFactoryNumber());
+    table.add("BUDGET", BesoFormatter.format(budgetPerWager));
+    table.add("BEST FACTORY ALL WAGERS", "#" + bestProfitTotal.getFactoryNumber());
+    table.add("BEST FACTORY PRO WAGER", "#" + bestProfitAvg.getFactoryNumber());
     table.print();
   }
 }
