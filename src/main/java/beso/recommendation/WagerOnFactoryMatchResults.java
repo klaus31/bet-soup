@@ -4,7 +4,6 @@ import java.util.List;
 
 import beso.base.Beso;
 import beso.pojo.Match;
-import beso.pojo.Quota;
 import beso.pojo.Team;
 import beso.pojo.WagerOn;
 import beso.tools.BesoFormatter;
@@ -43,13 +42,17 @@ public class WagerOnFactoryMatchResults implements WagerOnFactory {
     this(team, matches, 1, matchResultExpectation);
   }
 
+  public Team getTeam() {
+    return team;
+  }
+
   /**
    * recommend the given team if it won or not lose the given matches.
    * recommend the other team if the given team lose or not won the given matches.
    */
   @Override
-  public WagerOn getWagerOn(final Quota quota) {
-    if (!quota.getMatch().isWith(team)) {
+  public WagerOn getWagerOn(final Match matchRequested) {
+    if (!matchRequested.isWith(team)) {
       return null;
     }
     int matchesAsExpected = 0;
@@ -59,7 +62,7 @@ public class WagerOnFactoryMatchResults implements WagerOnFactory {
       }
     }
     if (1F * matchesAsExpected / matches.size() >= percentRequired) {
-      if (team.is(quota.getMatch().getTeam1())) {
+      if (team.is(matchRequested.getTeam1())) {
         return matchResultExpectation == LOSE || matchResultExpectation == NOT_WON ? TEAM_2_WIN : TEAM_1_WIN;
       } else {
         return matchResultExpectation == LOSE || matchResultExpectation == NOT_WON ? TEAM_1_WIN : TEAM_2_WIN;

@@ -1,11 +1,11 @@
 package beso.recommendation;
 
-import beso.pojo.Quota;
+import beso.pojo.Match;
 import beso.pojo.WagerOn;
 
 public interface WagerOnFactory {
 
-  String getWagerOnDescription();
+  WagerOn getWagerOn(Match match);
 
-  WagerOn getWagerOn(Quota quota);
+  String getWagerOnDescription();
 }

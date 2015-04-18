@@ -10,29 +10,28 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 
 import beso.pojo.Match;
-import beso.pojo.Quota;
 import beso.tools.UrlReader;
 
 abstract class QuotaServiceAbstract implements QuotaService {
 
   private final List<Match> matchesWithoutQuotaFound = new ArrayList<>();
-  private final List<Quota> quotasFound = new ArrayList<>();
+  private final List<Match> matchesWithQuotaFound = new ArrayList<>();
 
-  public QuotaServiceAbstract(final List<Match> matches) {
+  public QuotaServiceAbstract(final List<Match> matchesWithoutQuota) {
     final Map<String, String> urlContents = new HashMap<>();
-    for (Match match : matches) {
-      final String url = getUrl(match);
-      Quota quota = null;
+    for (Match matchWithoutQuota : matchesWithoutQuota) {
+      final String url = getUrl(matchWithoutQuota);
+      Match matchWithQuote = null;
       if (url != null) {
         if (!urlContents.containsKey(url)) {
           urlContents.put(url, getContent(url));
         }
-        quota = getQuota(match, urlContents.get(url));
+        matchWithQuote = getMatchWithQuota(matchWithoutQuota, urlContents.get(url));
       }
-      if (quota == null) {
-        matchesWithoutQuotaFound.add(match);
+      if (matchWithQuote == null) {
+        matchesWithoutQuotaFound.add(matchWithoutQuota);
       } else {
-        quotasFound.add(quota);
+        matchesWithQuotaFound.add(matchWithQuote);
       }
     }
   }
@@ -53,11 +52,11 @@ abstract class QuotaServiceAbstract implements QuotaService {
     return matchesWithoutQuotaFound;
   }
 
-  abstract Quota getQuota(Match match, String content);
+  abstract Match getMatchWithQuota(Match match, String content);
 
   @Override
-  public List<Quota> getQuotasFound() {
-    return quotasFound;
+  public List<Match> getMatchesWithQuotaFound() {
+    return matchesWithQuotaFound;
   }
 
   abstract String getUrl(Match match);

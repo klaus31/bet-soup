@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import beso.pojo.Match;
-import beso.pojo.Quota;
 
 @Primary
 @Component
@@ -23,6 +22,14 @@ public class BesoAsciiArtTable extends AsciiArtTable {
     this.setBorderCharacters("┏━┯┓┃┠─┬┨┿┣┫│┗┷┛┼");
   }
 
+  public void addContentCols(final Match match) {
+    final List<Object> contentCols = new ArrayList<>();
+    contentCols.add(BesoFormatter.format(match.getRateTeam1()));
+    contentCols.add(BesoFormatter.format(match.getRateTeam1()));
+    contentCols.add(BesoFormatter.format(match.getRateTeam1()));
+    this.add(contentCols);
+  }
+
   public void addContentCols(final Match match, final boolean withResult) {
     final List<Object> contentCols = new ArrayList<>();
     contentCols.add(BesoFormatter.format(match.getStart()));
@@ -32,14 +39,6 @@ public class BesoAsciiArtTable extends AsciiArtTable {
       contentCols.add(match.getGoalsTeam2() == null ? "-" : match.getGoalsTeam2() + "");
     }
     contentCols.add(match.getTeam2().getName());
-    this.add(contentCols);
-  }
-
-  public void addContentCols(final Quota quota) {
-    final List<Object> contentCols = new ArrayList<>();
-    contentCols.add(BesoFormatter.format(quota.getRateTeam1()));
-    contentCols.add(BesoFormatter.format(quota.getRateTeam1()));
-    contentCols.add(BesoFormatter.format(quota.getRateTeam1()));
     this.add(contentCols);
   }
 

@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import beso.dao.BesoDao;
+import beso.pojo.Match;
 import beso.recommendation.WagerOnFactory;
 import beso.recommendation.WagerOnFactoryRateBetween;
 
 @Component
 public class OptionsExplorerFactoryRateBetween extends OptionsExplorerWagerOnFactory {
+
+  private List<Match> matches;
 
   @Override
   public Object getDoc() {
@@ -33,5 +37,13 @@ public class OptionsExplorerFactoryRateBetween extends OptionsExplorerWagerOnFac
       max = min + .1;
     }
     return result;
+  }
+
+  @Override
+  protected List<Match> getMatchesToEvaluate(final WagerOnFactory wagerOnFactory) {
+    if (matches == null) {
+      matches = BesoDao.me().findMatches();
+    }
+    return matches;
   }
 }

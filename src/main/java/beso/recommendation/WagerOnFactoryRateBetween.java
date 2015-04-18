@@ -1,6 +1,6 @@
 package beso.recommendation;
 
-import beso.pojo.Quota;
+import beso.pojo.Match;
 import beso.pojo.WagerOn;
 import beso.tools.BesoFormatter;
 
@@ -23,19 +23,19 @@ public class WagerOnFactoryRateBetween implements WagerOnFactory {
   }
 
   @Override
-  public WagerOn getWagerOn(final Quota quota) {
+  public WagerOn getWagerOn(final Match match) {
     WagerOn result = null;
-    if (quota.getRateTeam1() >= min && quota.getRateTeam1() <= max) {
+    if (match.getRateTeam1() >= min && match.getRateTeam1() <= max) {
       result = WagerOn.TEAM_1_WIN;
     }
-    if (quota.getRateTeam2() >= min && quota.getRateTeam2() <= max) {
+    if (match.getRateTeam2() >= min && match.getRateTeam2() <= max) {
       if (result == null) {
         result = WagerOn.TEAM_2_WIN;
       } else {
         result = WagerOn.UNSURE;
       }
     }
-    if (quota.getRateDraw() >= min && quota.getRateDraw() <= max) {
+    if (match.getRateDraw() >= min && match.getRateDraw() <= max) {
       if (result == null) {
         result = WagerOn.DRAW;
       } else {

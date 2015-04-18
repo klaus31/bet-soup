@@ -42,4 +42,11 @@ public class OptionsExplorerFactoryMatchesWon extends OptionsExplorerWagerOnFact
     }
     return result;
   }
+
+  @Override
+  protected List<Match> getMatchesToEvaluate(final WagerOnFactory wagerOnFactory) {
+    Team currentTeamChecked = ((WagerOnFactoryMatchResults) wagerOnFactory).getTeam();
+    Query query = new Query(Criteria.where("team1").is(currentTeamChecked.getId()));
+    return BesoDao.me().find(query, Match.class);
+  }
 }

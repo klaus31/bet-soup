@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import beso.dao.BesoDao;
 import beso.main.Launchable;
 import beso.pojo.Match;
-import beso.pojo.Quota;
 import beso.services.QuotaService;
 import beso.services.QuotaServiceTipicoArchive;
 import beso.tools.BesoAsciiArtTable;
@@ -30,16 +29,16 @@ public class AddQuotas implements Launchable {
   // insert all matches of all known competitions of the last 5 years
   @Override
   public void launch() {
-    final List<Match> matches = BesoDao.me().findMatchesFinishedAndWithoutQuota();
+    final List<Match> matches = BesoDao.me().findMatchesFinishedWithoutQuota();
     final QuotaService quotaService = new QuotaServiceTipicoArchive(matches);
-    final List<Quota> quotas = quotaService.getQuotasFound();
+    final List<Match> matchesWithQuotaFound = quotaService.getMatchesWithQuotaFound();
     table.addHeaderColsForMatch(false);
     table.addHeaderColsForQuota();
-    for (Quota quota : quotas) {
-      table.addContentCols(quota.getMatch(), false);
-      table.addContentCols(quota);
-      quota.save();
+    for (Match matchWithQuotaFound : matchesWithQuotaFound) {
+      table.addContentCols(matchWithQuotaFound, false);
+      table.addContentCols(matchWithQuotaFound);
+      matchWithQuotaFound.save();
     }
-    defaultPrintStream.println(quotas.size() + " quotas upserted");
+    defaultPrintStream.println(matches.size() + " quotas upserted");
   }
 }

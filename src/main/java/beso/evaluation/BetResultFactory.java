@@ -1,7 +1,7 @@
 package beso.evaluation;
 
 import beso.pojo.BetResult;
-import beso.pojo.Quota;
+import beso.pojo.Match;
 import beso.pojo.Wager;
 import beso.pojo.WagerOn;
 import beso.recommendation.WagerOnFactory;
@@ -16,28 +16,28 @@ import static beso.pojo.WagerOn.UNSURE;
 public class BetResultFactory {
 
   public static BetResult get(final Wager wager) {
-    return get(wager.getWagerOn(), wager.getQuota());
+    return get(wager.getWagerOn(), wager.getMatch());
   }
 
-  public static BetResult get(final WagerOn wagerOn, final Quota quota) {
-    if (!quota.getMatch().isFinished()) {
+  public static BetResult get(final WagerOn wagerOn, final Match match) {
+    if (!match.isFinished()) {
       return UNKNOWN;
     }
     if (wagerOn == null || wagerOn == UNSURE) {
       return UNKNOWN;
     }
-    if (wagerOn == TEAM_1_WIN && quota.getMatch().getGoalsTeam1() > quota.getMatch().getGoalsTeam2()) {
+    if (wagerOn == TEAM_1_WIN && match.getGoalsTeam1() > match.getGoalsTeam2()) {
       return WIN;
-    } else if (wagerOn == TEAM_2_WIN && quota.getMatch().getGoalsTeam2() > quota.getMatch().getGoalsTeam1()) {
+    } else if (wagerOn == TEAM_2_WIN && match.getGoalsTeam2() > match.getGoalsTeam1()) {
       return WIN;
-    } else if (wagerOn == DRAW && quota.getMatch().getGoalsTeam2() == quota.getMatch().getGoalsTeam1()) {
+    } else if (wagerOn == DRAW && match.getGoalsTeam2() == match.getGoalsTeam1()) {
       return WIN;
     } else {
       return LOSE;
     }
   }
 
-  public static BetResult get(final WagerOnFactory factory, final Quota quota) {
-    return get(factory.getWagerOn(quota), quota);
+  public static BetResult get(final WagerOnFactory factory, final Match match) {
+    return get(factory.getWagerOn(match), match);
   }
 }

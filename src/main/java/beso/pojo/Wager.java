@@ -6,19 +6,19 @@ import beso.evaluation.BetResultFactory;
 public class Wager {
 
   final Budget budget;
-  final Quota quota;
+  final Match match;
   final WagerOn wagerOn;
 
-  public Wager(final Budget budget, final WagerOn wagerOn, final Quota quota) {
+  public Wager(final Budget budget, final WagerOn wagerOn, final Match match) {
     Beso.exitWithErrorIf(budget == null, "wager must be positive");
     Beso.exitWithErrorIf(budget.getValue() < 0, "wager must be positive");
     this.budget = budget;
     this.wagerOn = wagerOn;
-    this.quota = quota;
+    this.match = match;
   }
 
   public Profit getActualProfit() {
-    if (quota.getRate(wagerOn) == null) {
+    if (match.getRate(wagerOn) == null) {
       return new Profit(0D);
     }
     if (getBetResult() == BetResult.WIN) {
@@ -35,11 +35,11 @@ public class Wager {
   }
 
   public Profit getPossibleProfit() {
-    return new Profit((quota.getRate(wagerOn) * budget.getValue()) - budget.getValue());
+    return new Profit((match.getRate(wagerOn) * budget.getValue()) - budget.getValue());
   }
 
-  public Quota getQuota() {
-    return quota;
+  public Match getMatch() {
+    return match;
   }
 
   public double getValue() {

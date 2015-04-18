@@ -6,7 +6,6 @@ import java.util.List;
 
 import beso.pojo.Competition;
 import beso.pojo.Match;
-import beso.pojo.Quota;
 
 public class QuotaServiceTipicoArchive extends QuotaServiceAbstract {
 
@@ -24,7 +23,7 @@ public class QuotaServiceTipicoArchive extends QuotaServiceAbstract {
   }
 
   @Override
-  Quota getQuota(final Match match, final String content) {
+  Match getMatchWithQuota(final Match match, final String content) {
     final String teamMarker1 = getTipicoTeamRegex(match.getTeam1().getName());
     final String teamMarker2 = getTipicoTeamRegex(match.getTeam2().getName());
     try {
@@ -41,7 +40,10 @@ public class QuotaServiceTipicoArchive extends QuotaServiceAbstract {
       final double rateTeam1 = Double.parseDouble(quotaString[0].replace(',', '.'));
       final double rateDraw = Double.parseDouble(quotaString[1].replace(',', '.'));
       final double rateTeam2 = Double.parseDouble(quotaString[2].replace(',', '.'));
-      return new Quota(match, rateTeam1, rateDraw, rateTeam2);
+      match.setRateTeam1(rateTeam1);
+      match.setRateDraw(rateDraw);
+      match.setRateTeam2(rateTeam2);
+      return match;
     } catch (Exception e) {
       System.err.println("Tipico service failed: " + match.getId() + " (" + teamMarker1 + ":" + teamMarker2 + ")");
       return null;

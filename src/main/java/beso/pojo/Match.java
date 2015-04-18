@@ -19,6 +19,9 @@ public class Match implements Saveable {
   private Integer goalsTeam2 = null;
   @Id
   private String id;
+  private Double rateDraw;
+  private Double rateTeam1;
+  private Double rateTeam2;
   private final Date start;
   @DBRef
   private final Team team1;
@@ -48,8 +51,32 @@ public class Match implements Saveable {
     return id;
   }
 
-  public Quota getQuota() {
-    return BesoDao.me().findQuota(this);
+  public Double getRate(final WagerOn wagerOn) {
+    if (wagerOn == null) {
+      return null;
+    }
+    switch (wagerOn) {
+    case TEAM_1_WIN:
+      return rateTeam1;
+    case TEAM_2_WIN:
+      return rateTeam2;
+    case DRAW:
+      return rateDraw;
+    default:
+      return 0D;
+    }
+  }
+
+  public Double getRateDraw() {
+    return rateDraw;
+  }
+
+  public Double getRateTeam1() {
+    return rateTeam1;
+  }
+
+  public Double getRateTeam2() {
+    return rateTeam2;
   }
 
   public Date getStart() {
@@ -93,6 +120,18 @@ public class Match implements Saveable {
 
   public void setId(final String id) { // TODO mach weg, wenns geht
     this.id = id;
+  }
+
+  public void setRateDraw(final Double rateDraw) {
+    this.rateDraw = rateDraw;
+  }
+
+  public void setRateTeam1(final Double rateTeam1) {
+    this.rateTeam1 = rateTeam1;
+  }
+
+  public void setRateTeam2(final Double rateTeam2) {
+    this.rateTeam2 = rateTeam2;
   }
 
   public boolean startsAtSameDayAs(final Match match) {

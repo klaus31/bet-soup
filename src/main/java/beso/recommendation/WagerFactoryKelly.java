@@ -7,7 +7,6 @@ import beso.base.Beso;
 import beso.evaluation.WagerOnFactoryEvaluation;
 import beso.pojo.Budget;
 import beso.pojo.Match;
-import beso.pojo.Quota;
 import beso.pojo.Wager;
 import beso.pojo.WagerOn;
 
@@ -18,15 +17,15 @@ class WagerFactoryKelly implements WagerFactory {
   private final WagerOnFactory factory;
   private boolean recommandNotToBetMatches = false;
 
-  public WagerFactoryKelly(final List<Quota> referenceQuotas) {
-    this(new WagerOnFactoryFavorite(), referenceQuotas);
+  public WagerFactoryKelly(final List<Match> referenceMatches) {
+    this(new WagerOnFactoryFavorite(), referenceMatches);
   }
 
-  public WagerFactoryKelly(final WagerOnFactory factory, final List<Quota> referenceQuotas) {
+  public WagerFactoryKelly(final WagerOnFactory factory, final List<Match> referenceMatches) {
     this.factory = factory;
     WagerOnFactoryEvaluation evaluation = new WagerOnFactoryEvaluation();
     // IDEA evaluate chance with reality
-    chance = evaluation.getEvaluationResult(factory, referenceQuotas).getSuccessRate();
+    chance = evaluation.getEvaluationResult(factory, referenceMatches).getSuccessRate();
     Beso.exitWithErrorIf(chance == null, "could not compute the chance to win with given reference quota");
   }
 
@@ -42,9 +41,8 @@ class WagerFactoryKelly implements WagerFactory {
     final List<Match> matchesWithRecommendation = new ArrayList<>(matches.size());
     double kellyFactorsSum = 0;
     for (Match match : matches) {
-      final Quota quota = match.getQuota();
-      WagerOn bet = factory.getWagerOn(quota);
-      final Double profitRate = quota.getRate(bet);
+      WagerOn bet = factory.getWagerOn(match);
+      final Double profitRate = match.getRate(bet);
       if ((profitRate == null || profitRate < 1)) {
         if (recommandNotToBetMatches) {
           bets.add(bet);
@@ -62,7 +60,7 @@ class WagerFactoryKelly implements WagerFactory {
     for (int index = 0; index < kellyFactors.size(); index++) {
       final Double kellyFactor = kellyFactors.get(index);
       final double wagerValue = kellyFactor * totalBudget.getValue() / kellyFactorsSum;
-      wagers.add(new Wager(new Budget(wagerValue), bets.get(index), matchesWithRecommendation.get(index).getQuota()));
+      wagers.add(new Wager(new Budget(wagerValue), bets.get(index), matchesWithRecommendation.get(index)));
     }
     return wagers;
   }

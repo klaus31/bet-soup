@@ -8,7 +8,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import beso.dao.SpringMongoTestConfig;
 import beso.pojo.Competition;
 import beso.pojo.Match;
-import beso.pojo.Quota;
 import beso.pojo.Team;
 
 public class TestBeanFactory {
@@ -24,6 +23,13 @@ public class TestBeanFactory {
   public static Match getMatch(final int goalsTeam1, final int goalsTeam2) {
     Match match = getMatch();
     match.setGoals(goalsTeam1, goalsTeam2);
+    return match;
+  }
+
+  public static Match getMatch(final Match match, final double rateTeam1, final double rateDraw, final double rateTeam2) {
+    match.setRateDraw(rateDraw);
+    match.setRateTeam1(rateTeam1);
+    match.setRateTeam2(rateTeam2);
     return match;
   }
 
@@ -46,14 +52,13 @@ public class TestBeanFactory {
     return new Match(competition, team1, team2, calendar.getTime());
   }
 
-  public static Quota getQuota(final double rateTeam1, final double rateDraw, final double rateTeam2) {
-    Match match = getMatch();
-    return new Quota(match, rateTeam1, rateDraw, rateTeam2);
+  public static Match getQuota(final double rateTeam1, final double rateDraw, final double rateTeam2) {
+    return getMatch(getMatch(), rateTeam1, rateDraw, rateTeam2);
   }
 
-  public static Quota getQuotaWithFinishedMatch(final int goalsTeam1, final int goalsTeam2, final double rateTeam1, final double rateDraw, final double rateTeam2) {
-    Quota result = getQuota(rateTeam1, rateDraw, rateTeam2);
-    result.getMatch().setGoals(goalsTeam1, goalsTeam2);
+  public static Match getMatch(final int goalsTeam1, final int goalsTeam2, final double rateTeam1, final double rateDraw, final double rateTeam2) {
+    Match result = getQuota(rateTeam1, rateDraw, rateTeam2);
+    result.setGoals(goalsTeam1, goalsTeam2);
     return result;
   }
 

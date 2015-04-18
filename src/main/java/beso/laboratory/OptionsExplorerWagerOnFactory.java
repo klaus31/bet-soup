@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import beso.dao.BesoDao;
 import beso.evaluation.WagerEvaluation;
 import beso.evaluation.WagerOnEvaluationResult;
 import beso.evaluation.WagerOnFactoryEvaluation;
@@ -12,7 +11,6 @@ import beso.main.Launchable;
 import beso.pojo.Budget;
 import beso.pojo.Match;
 import beso.pojo.Profit;
-import beso.pojo.Quota;
 import beso.pojo.Wager;
 import beso.recommendation.WagerFactory;
 import beso.recommendation.WagerFactoryFixedBudgetPerWager;
@@ -66,24 +64,15 @@ public abstract class OptionsExplorerWagerOnFactory implements Launchable {
   private final Budget budgetPerWager = new Budget(1);
   private int factoriesChecked = 0;
   private int factoriesToCheck;
-  private final List<Match> matches;
-  private final List<Quota> quotas;
   @Autowired
   private BesoAsciiArtTable table;
   final private WagerEvaluation wagerEvaluation = new WagerEvaluation();
 
-  public OptionsExplorerWagerOnFactory() {
-    // FIXME this is nonsense - not all factories may want to check all quotes
-    // FIXME why exactly differentiate between quotes and matches?!
-    System.out.println("Please wait …"); // TODO is called twice in subclasses. no singleton?!
-    quotas = BesoDao.me().findQuotas();
-    matches = Quota.getMatches(quotas);
-  }
-
   private void fillTable(final WagerOnFactory wagerOnFactory) {
+    final List<Match> matches = getMatchesToEvaluate(wagerOnFactory);
     System.out.println("… " + (factoriesToCheck - factoriesChecked) + " factories left");
     factoriesChecked++;
-    final WagerOnEvaluationResult wagerOnEvaluationResult = bfe.getEvaluationResult(wagerOnFactory, quotas);
+    final WagerOnEvaluationResult wagerOnEvaluationResult = bfe.getEvaluationResult(wagerOnFactory, matches);
     if (wagerOnEvaluationResult.getCountWagersMade() == 0) {
       table.add(wagerOnFactory.getWagerOnDescription(), 0, 0, "-", "-", "-", "-");
     } else {
@@ -105,6 +94,8 @@ public abstract class OptionsExplorerWagerOnFactory implements Launchable {
 
   protected abstract List<WagerOnFactory> getFactories();
 
+  protected abstract List<Match> getMatchesToEvaluate(WagerOnFactory wagerOnFactory);
+
   @Override
   public void launch() {
     // prepare table
@@ -122,7 +113,6 @@ public abstract class OptionsExplorerWagerOnFactory implements Launchable {
     table.addHeadline("summary".toUpperCase());
     table.setNoHeaderColumns(2);
     table.add("FACTORIES CHECKED", factoriesChecked);
-    table.add("QUOTAS CHECKED", quotas.size());
     table.add("BUDGET", BesoFormatter.format(budgetPerWager));
     table.add("BEST FACTORY ALL WAGERS", "#" + (bestProfitTotal == null ? "-" : bestProfitTotal.getFactoryNumber()));
     table.add("BEST FACTORY PRO WAGER", "#" + (bestProfitAvg == null ? "-" : bestProfitAvg.getFactoryNumber()));

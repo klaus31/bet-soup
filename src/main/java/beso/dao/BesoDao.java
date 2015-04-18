@@ -1,6 +1,5 @@
 package beso.dao;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import beso.pojo.Competition;
 import beso.pojo.Match;
-import beso.pojo.Quota;
 import beso.pojo.Team;
 
 public class BesoDao implements AutoCloseable {
@@ -48,8 +46,12 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.count(queryMatchesFinished(), Match.class);
   }
 
-  public long countMatchesFinishedAndWithoutQuota() {
-    return findMatchesFinishedAndWithoutQuota().size();
+  public long countMatchesFinishedWithoutQuota() {
+    final Query query = queryMatchesFinished();
+    query.addCriteria(Criteria.where("rateTeam1").is(null));
+    query.addCriteria(Criteria.where("rateTeam2").is(null));
+    query.addCriteria(Criteria.where("rateDraw").is(null));
+    return mongoOperation.count(query, Match.class);
   }
 
   public long countMatchesWithoutResult() {
@@ -112,15 +114,12 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.find(queryMatchesFinished(), Match.class);
   }
 
-  public List<Match> findMatchesFinishedAndWithoutQuota() {
-    final List<Match> matchesFinished = findMatchesFinished();
-    final List<Match> matches = new ArrayList<>();
-    for (Match match : matchesFinished) {
-      if (match.getQuota() == null) {
-        matches.add(match);
-      }
-    }
-    return matches;
+  public List<Match> findMatchesFinishedWithoutQuota() {
+    Query query = queryMatchesFinished();
+    query.addCriteria(Criteria.where("rateTeam1").is(null));
+    query.addCriteria(Criteria.where("rateTeam2").is(null));
+    query.addCriteria(Criteria.where("rateDraw").is(null));
+    return mongoOperation.find(query, Match.class);
   }
 
   public List<Match> findMatchesWithoutResult() {
@@ -139,23 +138,17 @@ public class BesoDao implements AutoCloseable {
     return mongoOperation.find(query.limit(limit), Match.class);
   }
 
+  public List<Match> findMatchesWithQuotas(final int limit) {
+    Query query = queryMatchesFinished();
+    query.addCriteria(Criteria.where("rateTeam1").ne(null));
+    query.addCriteria(Criteria.where("rateTeam2").ne(null));
+    query.addCriteria(Criteria.where("rateDraw").ne(null));
+    query.limit(limit);
+    return mongoOperation.find(query, Match.class);
+  }
+
   public <T> T findOne(final Query query, final Class<T> entityClass) {
     return mongoOperation.findOne(query, entityClass);
-  }
-
-  public Quota findQuota(final Match match) {
-    final Query query = new Query(Criteria.where("match").is(match));
-    return mongoOperation.findOne(query, Quota.class);
-  }
-
-  public List<Quota> findQuotas() {
-    return mongoOperation.findAll(Quota.class);
-  }
-
-  public List<Quota> findQuotas(final int limit) {
-    final Query query = new Query();
-    query.limit(limit);
-    return mongoOperation.find(query, Quota.class);
   }
 
   public Team findTeam(final String id) {
