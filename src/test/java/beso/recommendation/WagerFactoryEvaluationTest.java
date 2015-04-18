@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import beso.TestBeanFactory;
 import beso.evaluation.WagerOnFactoryEvaluation;
@@ -12,10 +14,10 @@ import beso.pojo.Quota;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class BetFactoryEvaluationTest {
+public class WagerFactoryEvaluationTest {
 
   @Test
-  public void getBetFactoryEvaluationPrognosis() {
+  public void getRageOfWagerOnFactoryRateBetween() {
     // given
     WagerOnFactory factory = new WagerOnFactoryRateBetween(1D, 1.5D);
     WagerOnFactoryEvaluation evaluation = new WagerOnFactoryEvaluation();

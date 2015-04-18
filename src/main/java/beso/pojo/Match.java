@@ -74,6 +74,10 @@ public class Match implements Saveable {
     return goalsTeam1 != null;
   }
 
+  public boolean isWith(final Team team) {
+    return team1.getName().equals(team.getName()) || team2.getName().equals(team.getName());
+  }
+
   @Override
   public void save() {
     Beso.exitWithErrorIf(team1.getId() == null, "store teams first");

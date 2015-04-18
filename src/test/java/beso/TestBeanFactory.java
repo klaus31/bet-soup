@@ -21,11 +21,29 @@ public class TestBeanFactory {
     return getMatch("1. FC Onion", "1. FC Garlic");
   }
 
+  public static Match getMatch(final int goalsTeam1, final int goalsTeam2) {
+    Match match = getMatch();
+    match.setGoals(goalsTeam1, goalsTeam2);
+    return match;
+  }
+
   public static Match getMatch(final String nameTeam1, final String nameTeam2) {
+    return getMatch(getTeam(nameTeam1), getTeam(nameTeam2));
+  }
+
+  public static Match getMatch(final String teamName, final Team team) {
+    return getMatch(getTeam(teamName), team);
+  }
+
+  public static Match getMatch(final Team team, final String teamName) {
+    return getMatch(team, getTeam(teamName));
+  }
+
+  public static Match getMatch(final Team team1, final Team team2) {
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.YEAR, -1);
     Competition competition = new Competition(Competition.FOOTBALL_BUNDESLIGA_1);
-    return new Match(competition, getTeam(nameTeam1), getTeam(nameTeam2), calendar.getTime());
+    return new Match(competition, team1, team2, calendar.getTime());
   }
 
   public static Quota getQuota(final double rateTeam1, final double rateDraw, final double rateTeam2) {
