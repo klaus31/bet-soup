@@ -34,8 +34,11 @@ public class Beso {
     OptionBuilder.withLongOpt("help");
     OptionBuilder.withDescription("Show this help");
     options.addOption(OptionBuilder.create("h"));
+    OptionBuilder.withLongOpt("possibleTargets");
+    OptionBuilder.withDescription("List all possible targets");
+    options.addOption(OptionBuilder.create("p"));
     OptionBuilder.withLongOpt("target");
-    OptionBuilder.withDescription("The main class to launch. For a list with all possible targets use -t possibleTargets.");
+    OptionBuilder.withDescription("The main class to launch. For a list with all possible targets use -p to list all possible targets.");
     OptionBuilder.withArgName("target");
     OptionBuilder.hasArg();
     options.addOption(OptionBuilder.create("t"));

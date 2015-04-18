@@ -18,6 +18,11 @@ public class BesoAsciiArtTable extends AsciiArtTable {
   @Autowired
   private PrintStream defaultPrintStream;
 
+  public BesoAsciiArtTable() {
+    super();
+    this.setBorderCharacters("┏━┯┓┃┠─┬┨┿┣┫│┗┷┛┼");
+  }
+
   public void addContentCols(final Match match, final boolean withResult) {
     final List<Object> contentCols = new ArrayList<>();
     contentCols.add(BesoFormatter.format(match.getStart()));

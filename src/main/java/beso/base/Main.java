@@ -53,11 +53,13 @@ public class Main {
         final CommandLine commandLine = parser.parse(Beso.getOptions(), args);
         if (commandLine.hasOption('h')) {
           Beso.printUsage(0);
-        } else if (commandLine.hasOption('t')) {
+        }
+        if (commandLine.hasOption('p')) {
+          System.out.println(getPossibleTargets(context));
+        }
+        if (commandLine.hasOption('t')) {
           String target = commandLine.getOptionValue("t");
-          if (target.equals("possibleTargets")) {
-            System.out.println(getPossibleTargets(context));
-          } else if (context.containsBean(target)) {
+          if (context.containsBean(target)) {
             Launchable greatStuff = (Launchable) context.getBean(target);
             greatStuff.launch();
           } else {
