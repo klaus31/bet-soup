@@ -12,7 +12,7 @@ import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.services.QuotaService;
 import beso.services.QuotaServiceTipicoArchive;
-import beso.tools.BesoTable;
+import beso.tools.BesoAsciiArtTable;
 
 @Component
 public class AddQuotas implements Launchable {
@@ -20,7 +20,12 @@ public class AddQuotas implements Launchable {
   @Autowired
   private PrintStream defaultPrintStream;
   @Autowired
-  private BesoTable table;
+  private BesoAsciiArtTable table;
+
+  @Override
+  public Object getDoc() {
+    return "try to parse all quotas for all matches finished out of the internet and store it into the database";
+  }
 
   // insert all matches of all known competitions of the last 5 years
   @Override

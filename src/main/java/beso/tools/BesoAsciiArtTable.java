@@ -1,8 +1,10 @@
 package beso.tools;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +13,11 @@ import beso.pojo.Quota;
 
 @Primary
 @Component
-public class BesoAsciiArtTable extends AsciiArtTable implements BesoTable {
+public class BesoAsciiArtTable extends AsciiArtTable {
 
-  @Override
+  @Autowired
+  private PrintStream defaultPrintStream;
+
   public void addContentCols(final Match match, final boolean withResult) {
     final List<Object> contentCols = new ArrayList<>();
     contentCols.add(BesoFormatter.format(match.getStart()));
@@ -26,7 +30,6 @@ public class BesoAsciiArtTable extends AsciiArtTable implements BesoTable {
     this.add(contentCols);
   }
 
-  @Override
   public void addContentCols(final Quota quota) {
     final List<Object> contentCols = new ArrayList<>();
     contentCols.add(BesoFormatter.format(quota.getRateTeam1()));
@@ -35,7 +38,6 @@ public class BesoAsciiArtTable extends AsciiArtTable implements BesoTable {
     this.add(contentCols);
   }
 
-  @Override
   public void addHeaderColsForMatch(final boolean withResult) {
     final List<Object> headerCols = new ArrayList<>();
     headerCols.add("kick-off");
@@ -48,12 +50,15 @@ public class BesoAsciiArtTable extends AsciiArtTable implements BesoTable {
     this.addHeaderCols(headerCols);
   }
 
-  @Override
   public void addHeaderColsForQuota() {
     final List<Object> headerCols = new ArrayList<>();
     headerCols.add("quota 1");
     headerCols.add("quota X");
     headerCols.add("quota 2");
     this.addHeaderCols(headerCols);
+  }
+
+  public void print() {
+    this.print(defaultPrintStream);
   }
 }

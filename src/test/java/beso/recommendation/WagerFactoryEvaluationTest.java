@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import beso.TestBeanFactory;
 import beso.evaluation.WagerOnFactoryEvaluation;

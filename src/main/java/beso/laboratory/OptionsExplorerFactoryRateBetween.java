@@ -19,8 +19,8 @@ import beso.pojo.Wager;
 import beso.recommendation.WagerFactory;
 import beso.recommendation.WagerFactoryFixedBudgetPerWager;
 import beso.recommendation.WagerOnFactoryRateBetween;
+import beso.tools.BesoAsciiArtTable;
 import beso.tools.BesoFormatter;
-import beso.tools.BesoTable;
 import static beso.tools.BesoFormatter.format;
 import static beso.tools.BesoFormatter.formatEuro;
 
@@ -64,8 +64,14 @@ public class OptionsExplorerFactoryRateBetween implements Launchable {
     }
   }
 
+  private final Budget budgetPerWager = new Budget(1);
   @Autowired
-  private BesoTable table;
+  private BesoAsciiArtTable table;
+
+  @Override
+  public Object getDoc() {
+    return "show table: set " + format(budgetPerWager) + " for each wager using 'quota between min and max' and compare actual made profits";
+  }
 
   @Override
   public void launch() {
@@ -73,7 +79,6 @@ public class OptionsExplorerFactoryRateBetween implements Launchable {
     final List<Quota> quotas = BesoDao.me().findQuotas();
     final List<Match> matches = Quota.getMatches(quotas);
     final WagerOnFactoryEvaluation bfe = new WagerOnFactoryEvaluation();
-    final Budget budgetPerWager = new Budget(1);
     final double CHECK_MIN_MAX = 1.5;
     final double CHECK_MAX_MAX = 2;
     double min = 1;
@@ -83,7 +88,7 @@ public class OptionsExplorerFactoryRateBetween implements Launchable {
     int factoriesChecked = 0;
     // prepare table
     table.addHeadline("exploring options".toUpperCase());
-    table.addHeadline("set " + format(budgetPerWager) + " for each wager using 'quota between min and max' and compare actual made profits");
+    table.addHeadline(getDoc());
     table.addHeaderCols("#", "quota min", "max", "wagers made", "won", "won %", "€ won total", "€ won ø");
     final int factoriesToCheck = (int) (((CHECK_MIN_MAX - min) / .1) * ((CHECK_MAX_MAX - max) / .1));
     while (min < CHECK_MIN_MAX) {

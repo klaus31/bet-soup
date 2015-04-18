@@ -14,8 +14,8 @@ import beso.pojo.Profit;
 import beso.pojo.Quota;
 import beso.pojo.Wager;
 import beso.recommendation.WagerFactoryFavorite;
+import beso.tools.BesoAsciiArtTable;
 import beso.tools.BesoFormatter;
-import beso.tools.BesoTable;
 import static beso.tools.BesoFormatter.format;
 import static beso.tools.BesoFormatter.formatEuro;
 
@@ -23,7 +23,12 @@ import static beso.tools.BesoFormatter.formatEuro;
 public class EvaluationOfWagerFactoryKelly implements Launchable {
 
   @Autowired
-  private BesoTable table;
+  private BesoAsciiArtTable table;
+
+  @Override
+  public Object getDoc() {
+    return "show a table wagering on matches using the kelly strategy for budgets";
+  }
 
   @Override
   public void launch() {
@@ -33,7 +38,7 @@ public class EvaluationOfWagerFactoryKelly implements Launchable {
     final WagerFactoryFavorite wagerFactory = new WagerFactoryFavorite(quotas);
     final List<Wager> wagers = wagerFactory.getWagerRecommendation(Quota.getMatches(quotas), totalBudget);
     Beso.exitWithOkIf(wagers.isEmpty(), "no recommendations for wagers");
-    table.addHeadline("Evaluation of the favorite wager factory".toUpperCase());
+    table.addHeadline("evaluation of the favorite wager factory".toUpperCase());
     table.addHeaderCols("quota team1", "quota draw", "quota team2", "wager on", "wager amount", "actual profit", "bet result");
     for (Wager wager : wagers) {
       table.add(wager.getQuota().getRateTeam1());

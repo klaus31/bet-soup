@@ -1,32 +1,43 @@
 package beso.base;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import beso.main.Launchable;
+import beso.tools.BesoAsciiArtTable;
 
 public class Main {
 
-  private static List<String> getLaunchables(final ApplicationContext context) {
+  private static Map<String, Launchable> getLaunchables(final ApplicationContext context) {
     final Map<String, Object> components = context.getBeansWithAnnotation(Component.class);
-    final List<String> launchables = new ArrayList<>();
+    final Map<String, Launchable> launchables = new HashMap<>();
     for (String key : components.keySet()) {
       if (components.get(key) instanceof Launchable) {
-        launchables.add(key);
+        launchables.put(key, (Launchable) components.get(key));
       }
     }
     return launchables;
+  }
+
+  private static String getPossibleTargets(final ApplicationContext context) {
+    Map<String, Launchable> launchables = getLaunchables(context);
+    BesoAsciiArtTable table = new BesoAsciiArtTable();
+    table.addHeadline("POSSIBLE TARGETS");
+    table.addHeaderCols("target", "description");
+    table.setMaxColumnWidth(50);
+    for (String key : launchables.keySet()) {
+      table.add(key, launchables.get(key).getDoc());
+    }
+    return table.getOutput();
   }
 
   public static void main(final String... args) {
@@ -45,12 +56,12 @@ public class Main {
         } else if (commandLine.hasOption('t')) {
           String target = commandLine.getOptionValue("t");
           if (target.equals("possibleTargets")) {
-            System.out.println(StringUtils.join(getLaunchables(context), ", "));
+            System.out.println(getPossibleTargets(context));
           } else if (context.containsBean(target)) {
             Launchable greatStuff = (Launchable) context.getBean(target);
             greatStuff.launch();
           } else {
-            System.err.println("unknown target " + target + ". Possible targets: " + StringUtils.join(getLaunchables(context), ", "));
+            System.err.println("unknown target " + target + "." + System.lineSeparator() + getPossibleTargets(context));
             Beso.printUsage(1);
           }
         }

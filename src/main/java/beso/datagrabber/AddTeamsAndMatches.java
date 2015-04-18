@@ -12,7 +12,7 @@ import beso.main.Launchable;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.services.QuotaServiceOpenLigaDb;
-import beso.tools.BesoTable;
+import beso.tools.BesoAsciiArtTable;
 
 @Component
 public class AddTeamsAndMatches implements Launchable {
@@ -20,14 +20,18 @@ public class AddTeamsAndMatches implements Launchable {
   @Autowired
   private PrintStream defaultPrintStream;
   @Autowired
-  private BesoTable table;
+  private BesoAsciiArtTable table;
+
+  @Override
+  public Object getDoc() {
+    return "this tries to get new teams and matches of all known competitions out of the internet and put it into your db. a team is unknown, if the team name differs from db name. special thx to www.openligadb.de";
+  }
 
   // insert all matches of all known competitions of the last 5 years
   @Override
   public void launch() {
     final List<Competition> competitions = BesoDao.me().findCompetitions();
     table.addHeadline("ADD ALL TEAMS AND MATCHES");
-    table.addHeadline("this tries to get new teams and matches of all known competitions out of the internet and put it into your db. a team is unknown, if the team name differs from db name. special thx to www.openligadb.de");
     table.addHeaderColsForMatch(true);
     for (Competition competition : competitions) {
       final QuotaServiceOpenLigaDb openLigaDb = new QuotaServiceOpenLigaDb(competition);

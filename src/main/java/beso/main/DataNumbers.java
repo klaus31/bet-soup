@@ -8,13 +8,18 @@ import beso.pojo.Competition;
 import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.pojo.Team;
-import beso.tools.BesoTable;
+import beso.tools.BesoAsciiArtTable;
 
 @Component
 public class DataNumbers implements Launchable {
 
   @Autowired
-  private BesoTable table;
+  private BesoAsciiArtTable table;
+
+  @Override
+  public Object getDoc() {
+    return "count things in database and show";
+  }
 
   @Override
   public void launch() {

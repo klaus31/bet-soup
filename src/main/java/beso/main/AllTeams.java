@@ -7,13 +7,18 @@ import org.springframework.stereotype.Component;
 
 import beso.dao.BesoDao;
 import beso.pojo.Team;
-import beso.tools.BesoTable;
+import beso.tools.BesoAsciiArtTable;
 
 @Component
 public class AllTeams implements Launchable {
 
   @Autowired
-  private BesoTable table;
+  private BesoAsciiArtTable table;
+
+  @Override
+  public Object getDoc() {
+    return "show all teams in the database";
+  }
 
   @Override
   public void launch() {
