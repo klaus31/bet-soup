@@ -7,12 +7,14 @@ import beso.pojo.Match;
 import beso.pojo.Quota;
 import beso.pojo.Team;
 import beso.pojo.WagerOn;
+import beso.tools.BesoFormatter;
 import static beso.pojo.WagerOn.TEAM_1_WIN;
 import static beso.pojo.WagerOn.TEAM_2_WIN;
 import static beso.recommendation.MatchResultExpectation.LOSE;
 import static beso.recommendation.MatchResultExpectation.NOT_LOSE;
 import static beso.recommendation.MatchResultExpectation.NOT_WON;
 import static beso.recommendation.MatchResultExpectation.WON;
+import static beso.tools.BesoFormatter.format;
 
 public class WagerOnFactoryMatchResults implements WagerOnFactory {
 
@@ -65,5 +67,16 @@ public class WagerOnFactoryMatchResults implements WagerOnFactory {
     } else {
       return null;
     }
+  }
+
+  @Override
+  public String getWagerOnDescription() {
+    String result = "";
+    if (matchResultExpectation == NOT_WON || matchResultExpectation == LOSE) {
+      result = "the opponent if " + team.getName() + " ";
+    } else {
+      result = team.getName() + " if they ";
+    }
+    return result + format(matchResultExpectation) + " " + BesoFormatter.formatPercent(percentRequired * 1D) + " of given " + matches.size() + " matches";
   }
 }

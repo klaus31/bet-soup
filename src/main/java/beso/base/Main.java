@@ -2,6 +2,8 @@ package beso.base;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -29,12 +31,13 @@ public class Main {
   }
 
   private static String getPossibleTargets(final ApplicationContext context) {
-    Map<String, Launchable> launchables = getLaunchables(context);
+    final Map<String, Launchable> launchables = getLaunchables(context);
+    final SortedSet<String> keys = new TreeSet<String>(launchables.keySet());
     BesoAsciiArtTable table = new BesoAsciiArtTable();
     table.addHeadline("POSSIBLE TARGETS");
     table.addHeaderCols("target", "description");
     table.setMaxColumnWidth(50);
-    for (String key : launchables.keySet()) {
+    for (String key : keys) {
       table.add(key, launchables.get(key).getDoc());
     }
     return table.getOutput();

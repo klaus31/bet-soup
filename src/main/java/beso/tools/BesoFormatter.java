@@ -9,6 +9,7 @@ import beso.pojo.Budget;
 import beso.pojo.Competition;
 import beso.pojo.Profit;
 import beso.pojo.WagerOn;
+import beso.recommendation.MatchResultExpectation;
 
 public class BesoFormatter {
 
@@ -35,6 +36,22 @@ public class BesoFormatter {
   public static String format(final double number, final String pattern) {
     final DecimalFormat df = new DecimalFormat(pattern);
     return df.format(number);
+  }
+
+  public static String format(final MatchResultExpectation matchResultExpectation) {
+    if (matchResultExpectation == null) {
+      return "";
+    }
+    switch (matchResultExpectation) {
+    case WON:
+      return "won";
+    case LOSE:
+      return "lose";
+    case NOT_LOSE:
+      return "not lose";
+    default:
+      return "not won";
+    }
   }
 
   public static String format(final Profit profit) {

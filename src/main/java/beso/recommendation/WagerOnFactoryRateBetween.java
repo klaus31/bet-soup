@@ -2,6 +2,7 @@ package beso.recommendation;
 
 import beso.pojo.Quota;
 import beso.pojo.WagerOn;
+import beso.tools.BesoFormatter;
 
 public class WagerOnFactoryRateBetween implements WagerOnFactory {
 
@@ -42,5 +43,10 @@ public class WagerOnFactoryRateBetween implements WagerOnFactory {
       }
     }
     return result;
+  }
+
+  @Override
+  public String getWagerOnDescription() {
+    return String.format("rates between %s and %s", BesoFormatter.format(min), BesoFormatter.format(max));
   }
 }
