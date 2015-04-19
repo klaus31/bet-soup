@@ -33,7 +33,7 @@ public class EvaluationOfWagerFactoryKelly implements Launchable {
   @Override
   public void launch() {
     final int countOfGames = 1000;
-    final List<Match> matches = BesoDao.me().findMatchesWithQuotas(countOfGames);
+    final List<Match> matches = BesoDao.me().findMatchesFinishedWithQuotas(countOfGames);
     final Budget totalBudget = new Budget(100);
     final WagerFactoryFavorite wagerFactory = new WagerFactoryFavorite(matches);
     final List<Wager> wagers = wagerFactory.getWagerRecommendation(matches, totalBudget);

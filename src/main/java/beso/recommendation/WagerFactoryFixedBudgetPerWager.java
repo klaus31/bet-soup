@@ -24,10 +24,10 @@ public class WagerFactoryFixedBudgetPerWager implements WagerFactory {
   public List<Wager> getWagerRecommendation(final List<Match> matches, final Budget fixedBudget) {
     final List<Wager> wagers = new ArrayList<>(matches.size());
     for (Match match : matches) {
-      WagerOn bet = factory.getWagerOn(match);
-      final Double profitRate = match.getRate(bet);
+      WagerOn wagerOn = factory.getWagerOn(match);
+      final Double profitRate = match.getRate(wagerOn);
       if ((profitRate != null && profitRate > 1)) {
-        wagers.add(new Wager(fixedBudget, factory.getWagerOn(match), match));
+        wagers.add(new Wager(fixedBudget, wagerOn, match));
       }
     }
     return wagers;

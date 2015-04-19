@@ -63,18 +63,17 @@ public abstract class OptionsExplorerWagerOnFactory implements Launchable {
   final private WagerOnFactoryEvaluation bfe = new WagerOnFactoryEvaluation();
   private final Budget budgetPerWager = new Budget(1);
   private int factoriesChecked = 0;
-  private int factoriesToCheck;
   @Autowired
   private BesoAsciiArtTable table;
   final private WagerEvaluation wagerEvaluation = new WagerEvaluation();
 
-  private void fillTable(final WagerOnFactory wagerOnFactory) {
-    final List<Match> matches = getMatchesToEvaluate(wagerOnFactory);
-    System.out.println("… " + (factoriesToCheck - factoriesChecked) + " factories left");
+  private void fillTable(final OptionsExplorerWagerOnSubject oewoSubject) {
     factoriesChecked++;
+    final WagerOnFactory wagerOnFactory = oewoSubject.getWagerOnFactory();
+    final List<Match> matches = oewoSubject.getMatchesToEvaluate();
     final WagerOnEvaluationResult wagerOnEvaluationResult = bfe.getEvaluationResult(wagerOnFactory, matches);
     if (wagerOnEvaluationResult.getCountWagersMade() == 0) {
-      table.add(wagerOnFactory.getWagerOnDescription(), 0, 0, "-", "-", "-", "-");
+      table.add(factoriesChecked, wagerOnFactory.getWagerOnDescription(), 0, 0, "-", "-", "-");
     } else {
       final WagerFactory wagerFactory = new WagerFactoryFixedBudgetPerWager(wagerOnFactory);
       final List<Wager> wagers = wagerFactory.getWagerRecommendation(matches, budgetPerWager);
@@ -92,9 +91,7 @@ public abstract class OptionsExplorerWagerOnFactory implements Launchable {
     }
   }
 
-  protected abstract List<WagerOnFactory> getFactories();
-
-  protected abstract List<Match> getMatchesToEvaluate(WagerOnFactory wagerOnFactory);
+  protected abstract List<OptionsExplorerWagerOnSubject> getSubjects();
 
   @Override
   public void launch() {
@@ -102,10 +99,9 @@ public abstract class OptionsExplorerWagerOnFactory implements Launchable {
     table.addHeadline("exploring options".toUpperCase());
     table.addHeadline(getDoc());
     table.addHeaderCols("#", "factory", "wagers made", "won", "won %", "€ won total", "€ won ø");
-    List<WagerOnFactory> factories = getFactories();
-    factoriesToCheck = factories.size();
-    for (WagerOnFactory factory : factories) {
-      fillTable(factory);
+    final List<OptionsExplorerWagerOnSubject> oewoSubjects = getSubjects();
+    for (OptionsExplorerWagerOnSubject oewoSubject : oewoSubjects) {
+      fillTable(oewoSubject);
     }
     table.print();
     // table summary

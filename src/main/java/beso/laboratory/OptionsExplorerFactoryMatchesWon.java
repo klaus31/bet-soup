@@ -3,18 +3,17 @@ package beso.laboratory;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import beso.dao.BesoDao;
+import beso.dao.QueryBuilderMatch;
 import beso.pojo.Match;
 import beso.pojo.Team;
 import beso.recommendation.WagerOnFactory;
 import beso.recommendation.WagerOnFactoryMatchResults;
 
-@Primary
+// TODO this does not make much sense: we are testing one factory, result table compares different factories
 @Component
 public class OptionsExplorerFactoryMatchesWon extends OptionsExplorerWagerOnFactory {
 
@@ -25,28 +24,29 @@ public class OptionsExplorerFactoryMatchesWon extends OptionsExplorerWagerOnFact
     return "try options for wager on last " + LAST_N_MATCHES + " matches won (home or away)";
   }
 
-  @Override
-  protected List<WagerOnFactory> getFactories() {
-    final List<WagerOnFactory> result = new ArrayList<>();
-    final List<Team> teams = BesoDao.me().findTeams();
-    for (Team team : teams.subList(0, 5)) { // TODO try out 2 teams by now
-      final Criteria criteriaPlayedAtHome = Criteria.where("team1").is(team.getId());
-      final Criteria criteriaPlayedAway = Criteria.where("team2").is(team.getId());
-      final Query query = new Query(new Criteria().orOperator(criteriaPlayedAtHome, criteriaPlayedAway));
-      query.addCriteria(Criteria.where("goalsTeam1").ne(null));
-      List<Match> matches = BesoDao.me().find(query, Match.class);
-      if (matches.size() < LAST_N_MATCHES) {
-        continue;
-      }
-      result.add(new WagerOnFactoryMatchResults(team, matches.subList(0, LAST_N_MATCHES)));
-    }
-    return result;
+  private List<Match> getMatchesFinished(final Team team) {
+    final Query query = new QueryBuilderMatch().with(team).withResult().sortByStartDesc().build().limit(LAST_N_MATCHES + 1);
+    return BesoDao.me().find(query, Match.class).subList(1, LAST_N_MATCHES + 1);
+  }
+
+  private List<Match> getMatchesToEvaluate(final Team team) {
+    final Query query = new QueryBuilderMatch().with(team).withResult().sortByStartDesc().withQuota().build().limit(1);
+    return BesoDao.me().find(query, Match.class);
   }
 
   @Override
-  protected List<Match> getMatchesToEvaluate(final WagerOnFactory wagerOnFactory) {
-    Team currentTeamChecked = ((WagerOnFactoryMatchResults) wagerOnFactory).getTeam();
-    Query query = new Query(Criteria.where("team1").is(currentTeamChecked.getId()));
-    return BesoDao.me().find(query, Match.class);
+  protected List<OptionsExplorerWagerOnSubject> getSubjects() {
+    final List<OptionsExplorerWagerOnSubject> result = new ArrayList<>();
+    final List<Team> teams = BesoDao.me().findTeams();
+    for (Team team : teams) {
+      final List<Match> matchesFinished = getMatchesFinished(team);
+      final List<Match> matchesToEvaluate = getMatchesToEvaluate(team);
+      if (matchesFinished.size() < LAST_N_MATCHES || matchesToEvaluate == null) {
+        continue;
+      }
+      final WagerOnFactory wagerOnFactory = new WagerOnFactoryMatchResults(team, matchesFinished);
+      result.add(new OptionsExplorerWagerOnSubject(wagerOnFactory, matchesToEvaluate));
+    }
+    return result;
   }
 }
