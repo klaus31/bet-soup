@@ -14,11 +14,11 @@ import beso.pojo.Match;
 import beso.pojo.Team;
 import beso.tools.UrlReader;
 
-public class QuotaServiceOpenLigaDb {
+public class TeamAndMatchesServiceOpenLigaDb {
 
   private final Competition competition;
 
-  public QuotaServiceOpenLigaDb(final Competition competition) {
+  public TeamAndMatchesServiceOpenLigaDb(final Competition competition) {
     if (!BesoDao.me().exists(competition)) {
       competition.save();
     }

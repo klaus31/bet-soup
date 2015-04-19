@@ -11,7 +11,7 @@ import beso.dao.BesoDao;
 import beso.main.Launchable;
 import beso.pojo.Competition;
 import beso.pojo.Match;
-import beso.services.QuotaServiceOpenLigaDb;
+import beso.services.TeamAndMatchesServiceOpenLigaDb;
 import beso.tools.BesoAsciiArtTable;
 
 @Component
@@ -34,7 +34,7 @@ public class AddTeamsAndMatches implements Launchable {
     table.addHeadline("ADD ALL TEAMS AND MATCHES");
     table.addHeaderColsForMatch(true);
     for (Competition competition : competitions) {
-      final QuotaServiceOpenLigaDb openLigaDb = new QuotaServiceOpenLigaDb(competition);
+      final TeamAndMatchesServiceOpenLigaDb openLigaDb = new TeamAndMatchesServiceOpenLigaDb(competition);
       final int currentYear = Calendar.getInstance().get(Calendar.YEAR);
       int indexYear = currentYear - 5;
       final List<Match> matches = openLigaDb.getMatchData(indexYear);

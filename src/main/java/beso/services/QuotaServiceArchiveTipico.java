@@ -7,9 +7,9 @@ import java.util.List;
 import beso.pojo.Competition;
 import beso.pojo.Match;
 
-public class QuotaServiceTipicoArchive extends QuotaServiceAbstract {
+public class QuotaServiceArchiveTipico extends QuotaServiceAbstract {
 
-  public QuotaServiceTipicoArchive(final List<Match> matches) {
+  public QuotaServiceArchiveTipico(final List<Match> matches) {
     super(matches);
   }
 

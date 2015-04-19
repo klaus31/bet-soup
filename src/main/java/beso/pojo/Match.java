@@ -97,6 +97,10 @@ public class Match implements Saveable {
     return team2;
   }
 
+  public boolean hasQuota() {
+    return rateTeam1 != null && rateTeam2 != null && rateDraw != null;
+  }
+
   public boolean isFinished() {
     return goalsTeam1 != null;
   }

@@ -3,7 +3,6 @@ package beso.laboratory;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import beso.dao.BesoDao;
@@ -12,7 +11,6 @@ import beso.pojo.Match;
 import beso.recommendation.WagerOnFactory;
 import beso.recommendation.WagerOnFactoryRateBetween;
 
-@Primary
 @Component
 public class OptionsExplorerFactoryRateBetween extends OptionsExplorerWagerOnFactory {
 

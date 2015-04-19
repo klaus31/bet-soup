@@ -33,8 +33,10 @@ public class NextMatchesFootball implements Launchable {
     final List<Match> matches = BesoDao.me().findMatchesWithoutResult(competition, SHOW_N_MATCHES);
     table.addHeadline(headline.toUpperCase());
     table.addHeaderColsForMatch(false);
+    table.addHeaderColsForQuota();
     for (Match match : matches) {
       table.addContentCols(match, false);
+      table.addContentColsQuota(match);
     }
     table.print();
   }
